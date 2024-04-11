@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="nl">
+  <head>
+    <title>Botanical Monuments — IABR 2024 - Nature of Hope</title>
+    <meta name="description" content="Botanical Monuments — IABR 2024 - Nature of Hope">
+
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css"
+      integrity="sha512-NhSC1YmyruXifcj/KFRWoC561YpHpc5Jtzgvbuzx5VozKpWvQ+4nXhPdFgmx8xqexRcpAglTj9sIBWINXa8x5w=="
+      crossorigin="anonymous"
+    />
+    <link
+      href="https://api.mapbox.com/mapbox-gl-js/v2.1.1/mapbox-gl.css"
+      rel="stylesheet"
+    />
+    <link rel="preconnect" href="https://fonts.gstatic.com" />
+   
+    <link href="style.css" rel="stylesheet" />
+    <script src="https://api.mapbox.com/mapbox-gl-js/v2.1.1/mapbox-gl.js"></script>
+    <script type="text/javascript" src="js/processLocations.js"></script>
+    <script type="text/javascript" src="js/togeojson.js"></script>
+    <script type="text/javascript" src="js/hashtag.js"></script>
+    <script type="text/javascript" src="js/taglist.js"></script>
+    <script type="text/javascript" src="js/filter.js"></script>
+    <script type="text/javascript" src="js/markers.js"></script>
+    <script type="text/javascript" src="js/location.js"></script>
+    <script type="text/javascript" src="js/gallery.js"></script>
+    <script type="text/javascript" src="js/state.js"></script>
+    <script type="text/javascript" src="js/emoji.js"></script>
+
+    <link rel="apple-touch-icon" sizes="180x180" href="https://cdn.glitch.com/35c0f702-4b7f-4512-89ca-8f32ca8189c1%2Fapple-touch-icon.png?v=1615280287521">
+    <link rel="icon" type="image/png" sizes="32x32" href="https://cdn.glitch.com/35c0f702-4b7f-4512-89ca-8f32ca8189c1%2Ffavicon-32x32.png?v=1615280287563">
+    <link rel="icon" type="image/png" sizes="16x16" href="https://cdn.glitch.com/35c0f702-4b7f-4512-89ca-8f32ca8189c1%2Ffavicon-16x16.png?v=1615280287161">
+    <link rel="manifest" href="https://cdn.glitch.com/35c0f702-4b7f-4512-89ca-8f32ca8189c1%2Fsite.webmanifest?v=1615280287438">
+    <meta name="msapplication-TileColor" content="#003429">
+    <meta name="theme-color" content="#003429">
+  </head>
+  <body data-state="list" data-panel="down">
+    <div id="map">
+      <div id="filter"></div>
+    </div>
+    <div id="panel">
+      <div id="topbar">
+        <div id="title">Botanical Monuments</div>
+        <div id="close" class="arrow">
+          <svg
+            width="24"
+            height="24"
+            viewbox="0 0 24 24"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M20 11H7.83L13.42 5.41L12 4L4 12L12 20L13.41 18.59L7.83 13H20V11Z"
+              fill="#000000"
+            />
+          </svg>
+        </div>
+        <div id="toggle">
+          <div class="toggle-up arrow">
+            <svg
+              width="24"
+              height="24"
+              viewbox="0 0 24 24"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M4 12L5.41 13.41L11 7.83V20H13V7.83L18.58 13.42L20 12L12 4L4 12Z"
+                fill="#000000"
+              />
+            </svg>
+          </div>
+          <div class="toggle-down arrow">
+            <svg
+              width="24"
+              height="24"
+              viewbox="0 0 24 24"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M20 12L18.59 10.59L13 16.17V4H11V16.17L5.42 10.58L4 12L12 20L20 12Z"
+                fill="#000000"
+              />
+            </svg>
+          </div>
+        </div>
+        <div id="menu-toggle">☰</div>
+      </div>
+      <div id="info"></div>
+      <div id="list"></div>
+      <div id="menu">
+        <div id="about">
+          <h2>Botanical Monuments</h2>
+
+          Botanical Monuments — IABR 2024 - Nature of Hope
+         
+        </div>
+      </div>
+    </div>
+
+    <script>
+      if (location.protocol != "https:") {
+        location.href =
+          "https:" +
+          window.location.href.substring(window.location.protocol.length);
+      }
+    </script>
+    <script type="text/javascript">
+      mapboxgl.accessToken =
+        "pk.eyJ1IjoidG9vbmtvZWhvcnN0IiwiYSI6ImNqb2ZyYjhiZDAweWIzcXM2aWlhMmJxcGYifQ.OGRL7kejFrWD-MEazU8lTg";
+
+      let locations = {};
+      let map = null;
+      let prevZoom = undefined;
+      let prevCenter = undefined;
+
+      let body = document.body;
+      let panel = document.getElementById("panel");
+
+      let toggle = document.getElementById("toggle");
+      let close = document.getElementById("close");
+
+
+      let menuToggle = document.getElementById("menu-toggle");
+
+      toggle.addEventListener("click", e => {
+        togglePanel();
+      });
+
+      close.addEventListener("click", e => {
+        setState("list");
+      });
+     
+      menuToggle.addEventListener("click", e => {
+        setState("menu");
+        togglePanel("up");
+      });
+      
+
+      fetch(
+        "https://www.google.com/maps/d/kml?forcekml=1&mid=1iaBUt-YoQnTFQPocSNxlpKPP-9_RSVk"
+      )
+        .then(response => response.text())
+        .then(kml =>{
+            //split the KML up in 3 parts.  
+            const folder2tag = {
+              "Gardens" : "garden",
+              "Personal Favorites" : "favorite",
+              "Cemetery" : "cemetery",
+              "Untitled layer" : "garden"
+            }    
+        
+            let doc = new DOMParser().parseFromString(kml, "text/xml");
+            let doc_folders = doc.getElementsByTagName('Folder');
+            let _locations = [];
+            for (i = 0; i < doc_folders.length; i++) { 
+                let tag = folder2tag[doc_folders[i].getElementsByTagName("name")[0].innerHTML] || "garden";
+                let _locs = toGeoJSON.kml(doc_folders[i],tag).features;
+                _locations = _locations.concat(_locs);
+                console.log(tag," total: ",_locs.length);
+            }
+
+            return _locations;
+            //return toGeoJSON.kml(new DOMParser().parseFromString(kml, "text/xml"))
+          }
+        )
+        .then(processLocations)
+        .then(createTagList)
+        .then(drawMap)
+        .then(createGallery)
+        .then(filter)
+        .catch(showError);
+
+      function showError(e) {
+        console.log(e);
+      }
+
+      function goToLocation() {
+        let params = new URL(document.location).searchParams;
+        let id = params.get("id");
+        if (id) {
+          showLocation(id, "pageLoad");
+        } else {
+          setState("list");
+        }
+      }
+
+      async function drawMap(locations) {
+        map = new mapboxgl.Map({
+          container: "map",
+          style: "mapbox://styles/toonkoehorst/cklxkpcso4yo017s51mnhhn9j",
+          center: [4.472671, 51.919340], //51.919340, 4.472671
+          zoom: 12
+        });
+
+        map.on("load", addMarkers);
+        map.on("load", filter);
+
+        map.on("load", goToLocation);
+        window.addEventListener("popstate", goToLocation);
+
+        map.on("zoomend", filter);
+        map.on("moveend", filter);
+
+        let filterEl = document.getElementById("filter");
+        filterEl
+          .querySelectorAll("input[type='checkbox']")
+          .forEach(input => input.addEventListener("change", filter));
+
+        return;
+      }
+    </script>
+  </body>
+</html>
