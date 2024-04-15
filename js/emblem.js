@@ -1,6 +1,6 @@
 function addEmblem() {
   return;
-//   let emblem = "https://cdn.glitch.com/35c0f702-4b7f-4512-89ca-8f32ca8189c1%2Femblem.png?v=1615195243392";
+//   let emblem = "https://cdn.glitch.global/4c0493cc-1166-4590-9984-15c2b192cd62/Placeholder.png?v=1712863059781";
 
 //   let width = 6.5;
 //   let height = 4;

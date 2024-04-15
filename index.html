@@ -2,7 +2,10 @@
 <html lang="nl">
   <head>
     <title>Botanical Monuments — IABR 2024 - Nature of Hope</title>
-    <meta name="description" content="Botanical Monuments — IABR 2024 - Nature of Hope">
+    <meta
+      name="description"
+      content="Botanical Monuments — IABR 2024 - Nature of Hope"
+    />
 
     <meta charset="UTF-8" />
     <meta
@@ -20,26 +23,46 @@
       rel="stylesheet"
     />
     <link rel="preconnect" href="https://fonts.gstatic.com" />
-   
+
     <link href="style.css" rel="stylesheet" />
     <script src="https://api.mapbox.com/mapbox-gl-js/v2.1.1/mapbox-gl.js"></script>
-    <script type="text/javascript" src="js/processLocations.js"></script>
     <script type="text/javascript" src="js/togeojson.js"></script>
-    <script type="text/javascript" src="js/hashtag.js"></script>
+    <script type="text/javascript" src="js/settings.js"></script>
+    <script type="text/javascript" src="js/utils.js"></script>
+    <script type="text/javascript" src="js/place.js"></script>
+
+<!--     <script type="text/javascript" src="js/processLocations.js"></script>
     <script type="text/javascript" src="js/taglist.js"></script>
-    <script type="text/javascript" src="js/filter.js"></script>
+    <script type="text/javascript" src="js/filte  r.js"></script>
     <script type="text/javascript" src="js/markers.js"></script>
     <script type="text/javascript" src="js/location.js"></script>
     <script type="text/javascript" src="js/gallery.js"></script>
     <script type="text/javascript" src="js/state.js"></script>
     <script type="text/javascript" src="js/emoji.js"></script>
-
-    <link rel="apple-touch-icon" sizes="180x180" href="https://cdn.glitch.com/35c0f702-4b7f-4512-89ca-8f32ca8189c1%2Fapple-touch-icon.png?v=1615280287521">
-    <link rel="icon" type="image/png" sizes="32x32" href="https://cdn.glitch.com/35c0f702-4b7f-4512-89ca-8f32ca8189c1%2Ffavicon-32x32.png?v=1615280287563">
-    <link rel="icon" type="image/png" sizes="16x16" href="https://cdn.glitch.com/35c0f702-4b7f-4512-89ca-8f32ca8189c1%2Ffavicon-16x16.png?v=1615280287161">
-    <link rel="manifest" href="https://cdn.glitch.com/35c0f702-4b7f-4512-89ca-8f32ca8189c1%2Fsite.webmanifest?v=1615280287438">
-    <meta name="msapplication-TileColor" content="#003429">
-    <meta name="theme-color" content="#003429">
+ -->
+    <link
+      rel="apple-touch-icon"
+      sizes="180x180"
+      href="https://cdn.glitch.com/35c0f702-4b7f-4512-89ca-8f32ca8189c1%2Fapple-touch-icon.png?v=1615280287521"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="32x32"
+      href="https://cdn.glitch.com/35c0f702-4b7f-4512-89ca-8f32ca8189c1%2Ffavicon-32x32.png?v=1615280287563"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="16x16"
+      href="https://cdn.glitch.com/35c0f702-4b7f-4512-89ca-8f32ca8189c1%2Ffavicon-16x16.png?v=1615280287161"
+    />
+    <link
+      rel="manifest"
+      href="https://cdn.glitch.com/35c0f702-4b7f-4512-89ca-8f32ca8189c1%2Fsite.webmanifest?v=1615280287438"
+    />
+    <meta name="msapplication-TileColor" content="#003429" />
+    <meta name="theme-color" content="#003429" />
   </head>
   <body data-state="list" data-panel="down">
     <div id="map">
@@ -99,9 +122,7 @@
       <div id="menu">
         <div id="about">
           <h2>Botanical Monuments</h2>
-
           Botanical Monuments — IABR 2024 - Nature of Hope
-         
         </div>
       </div>
     </div>
@@ -128,57 +149,88 @@
       let toggle = document.getElementById("toggle");
       let close = document.getElementById("close");
 
-
       let menuToggle = document.getElementById("menu-toggle");
 
-      toggle.addEventListener("click", e => {
+      toggle.addEventListener("click", (e) => {
         togglePanel();
       });
 
-      close.addEventListener("click", e => {
+      close.addEventListener("click", (e) => {
         setState("list");
       });
-     
-      menuToggle.addEventListener("click", e => {
+
+      menuToggle.addEventListener("click", (e) => {
         setState("menu");
         togglePanel("up");
       });
-      
 
       fetch(
-        "https://www.google.com/maps/d/kml?forcekml=1&mid=1iaBUt-YoQnTFQPocSNxlpKPP-9_RSVk"
+        GMAP_URL
       )
-        .then(response => response.text())
-        .then(kml =>{
-            //split the KML up in 3 parts.  
-            const folder2tag = {
-              "Gardens" : "garden",
-              "Personal Favorites" : "favorite",
-              "Cemetery" : "cemetery",
-              "Untitled layer" : "garden"
-            }    
-        
-            let doc = new DOMParser().parseFromString(kml, "text/xml");
-            let doc_folders = doc.getElementsByTagName('Folder');
-            let _locations = [];
-            for (i = 0; i < doc_folders.length; i++) { 
-                let tag = folder2tag[doc_folders[i].getElementsByTagName("name")[0].innerHTML] || "garden";
-                let _locs = toGeoJSON.kml(doc_folders[i],tag).features;
-                _locations = _locations.concat(_locs);
-                console.log(tag," total: ",_locs.length);
-            }
+        .then((response) => response.text())
+        .then((kml) => {
+          
+        //split the KML up in 3 parts.
+          const folder2tag = {
+            Locations: "Location",
+            Areas: "Area",
+          };
 
-            return _locations;
-            //return toGeoJSON.kml(new DOMParser().parseFromString(kml, "text/xml"))
+          let doc = new DOMParser().parseFromString(kml, "text/xml");
+          let doc_folders = doc.getElementsByTagName("Folder");
+          let _locations = [];
+          for (i = 0; i < doc_folders.length; i++) {
+            let tag =
+              folder2tag[
+                doc_folders[i].getElementsByTagName("name")[0].innerHTML
+              ] || "garden";
+            let _locs = toGeoJSON.kml(doc_folders[i], tag).features;
+            _locations = _locations.concat(_locs);
+            console.log(tag, " total: ", _locs.length);
           }
-        )
-        .then(processLocations)
-        .then(createTagList)
-        .then(drawMap)
-        .then(createGallery)
-        .then(filter)
-        .catch(showError);
 
+          return _locations;
+        })
+
+        .then(drawMap)
+        .then(createPlaces)
+        // .then(processLocations)
+        // .then(createTagList)
+        // .then(createGallery)
+        // .then(filter)
+      .catch(showError);
+
+      async function createPlaces(locations) {
+        locations.forEach((location) => {
+          let place = new Place(location, map);
+        });
+      }
+
+      async function drawMap(locations) {
+        map = new mapboxgl.Map({
+          container: "map",
+          style: MAPBOX_STYLE,
+          center: MAPBOX_CENTER, //51.919340, 4.472671
+          zoom: 12,
+        });
+
+//         map.on("load", addMarkers);
+//         map.on("load", filter);
+
+//         map.on("load", goToLocation);
+//         window.addEventListener("popstate", goToLocation);
+
+//         map.on("zoomend", filter);
+//         map.on("moveend", filter);
+
+//         let filterEl = document.getElementById("filter");
+//         filterEl
+//           .querySelectorAll("input[type='checkbox']")
+//           .forEach((input) => input.addEventListener("change", filter));
+
+        return locations;
+      }
+      
       function showError(e) {
         console.log(e);
       }
@@ -191,31 +243,6 @@
         } else {
           setState("list");
         }
-      }
-
-      async function drawMap(locations) {
-        map = new mapboxgl.Map({
-          container: "map",
-          style: "mapbox://styles/toonkoehorst/cklxkpcso4yo017s51mnhhn9j",
-          center: [4.472671, 51.919340], //51.919340, 4.472671
-          zoom: 12
-        });
-
-        map.on("load", addMarkers);
-        map.on("load", filter);
-
-        map.on("load", goToLocation);
-        window.addEventListener("popstate", goToLocation);
-
-        map.on("zoomend", filter);
-        map.on("moveend", filter);
-
-        let filterEl = document.getElementById("filter");
-        filterEl
-          .querySelectorAll("input[type='checkbox']")
-          .forEach(input => input.addEventListener("change", filter));
-
-        return;
       }
     </script>
   </body>

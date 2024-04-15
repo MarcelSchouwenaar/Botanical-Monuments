@@ -36,19 +36,19 @@ function showUserLocation() {
     removeUserLocationMarker();
     watchId = null;
     showUserLocationEl.innerHTML = "Locatie tonen gestopt";
-    setTimeout(_ => {showUserLocationEl.innerHTML = "Laat mijn locatie zien"}, 1000);
+    setTimeout(_ => {showUserLocationEl.innerHTML = "Show my location"}, 1000);
     return;
   }
   if (navigator.geolocation) {
     showUserLocationEl.innerHTML = "Locatie wordt getoond";
-    setTimeout(_ => {showUserLocationEl.innerHTML = "Stop met locatie tonen"}, 1000);
+    setTimeout(_ => {showUserLocationEl.innerHTML = "Stop showing my location"}, 1000);
 
     watchId = navigator.geolocation.watchPosition(
       showPosition,
       showPositionError
     );
   } else {
-    showUserLocationEl.innerHTML = "Je locatie kan niet bepaald worden";
+    showUserLocationEl.innerHTML = "Can't access your location";
   }
 }
 

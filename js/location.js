@@ -37,9 +37,16 @@ function showLocation(id,event){
       if(!location) return;
   
       console.log(location.properties, [ location.geometry.coordinates[0], location.geometry.coordinates[1] ]);
+      
+      let center = [];
+      if(location.geometry.type == "Polygon"){
+          center = [location.geometry.coordinates[0][0][0], location.geometry.coordinates[0][0][1]];
+      } else {
+        center = [ location.geometry.coordinates[0], location.geometry.coordinates[1] ]
+      }    
   
       map.flyTo({
-        center: [ location.geometry.coordinates[0], location.geometry.coordinates[1] ],
+        center: center,
         zoom: newZoom
       });
 

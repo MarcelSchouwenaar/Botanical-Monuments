@@ -5,9 +5,11 @@ function findCommonTags(arr1, arr2) {
 let markerIconDefault = "🌿";
 
 let markerIcons = {
-  garden: "🌿",
-  favorite: "❣️",
-  cemetery: "🪦",
+  "community"    : "x",
+  "historical"   : "x",
+  "education"    : "x",
+  "biodiversity" : "x",
+  "food"         : "x"
 };
 
 let getRandomGardenIcon = function () {
@@ -210,10 +212,17 @@ function getIconAndTag(tags) {
 
   // let _defaultTopLevelTags = ["garden", "public", "tuin", "gebouw", "pad"];
 
-  let _defaultTopLevelTags = ["garden", "favorite", "cemetery"];
+  let _defaultTopLevelTags = [
+    "location",
+    "community"    ,
+    "historical"   ,
+    "education"    ,
+    "biodiversity" ,
+    "food"        
+  ];
 
   if (!findCommonTags(tags, _defaultTopLevelTags)) {
-    let missingTag = "garden";
+    let missingTag = "location";
     tags.reverse().forEach((tag) => {
       if (newMarkerIcons[tag] !== undefined) return newMarkerIcons[tag].parent;
     });
@@ -222,13 +231,13 @@ function getIconAndTag(tags) {
 
   tags.reverse().forEach((tag) => {
     if (markerIcons[tag]) markerIcon = markerIcons[tag];
-    if (tag == "garden") markerIcon = getRandomGardenIcon();
+    if (tag == "location") markerIcon = getRandomGardenIcon();
   });
 
   tags.reverse().forEach((tag) => {
     if (newMarkerIcons[tag]) {
-      if (tag == "garden") {
-        console.log("garden icon!");
+      if (tag == "location") {
+        console.log("location icon!");
         markerIcon = getRandomGardenIcon();
       } else {
         markerIcon = newMarkerIcons[tag].icon;

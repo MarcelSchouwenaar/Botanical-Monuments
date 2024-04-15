@@ -33,6 +33,8 @@ async function processLocations(_locations) {
   let shuffledLocations = shuffle(locations.data);
   shuffledLocations.forEach(function(_location) {
     
+    console.log("location:",_location);
+       
     
     if (!_location.properties.description || _location.properties.description == "") {
       _location.properties.description   = "";
@@ -62,7 +64,7 @@ async function processLocations(_locations) {
 
     
     //produce hash
-    const id = getHash([ _location.geometry.coordinates[0], _location.geometry.coordinates[1] ].join(", "));
+    const id = getHash(_location.properties.name + _location.properties.description);
     _location.properties.id = id;
     _location.properties.i = i;
 
@@ -74,6 +76,7 @@ async function processLocations(_locations) {
     _location.properties.description = removeImages(_location.properties.description);
     _location.properties.description = trimSpaces(_location.properties.description);
 
+    
 
   });
  

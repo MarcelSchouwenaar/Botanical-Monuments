@@ -60,7 +60,7 @@ function removeImages(inputText) {
 
   return inputText;
 }
-function getHash(input){
+function getID(input){
   var hash = 0, len = input.length;
   for (var i = 0; i < len; i++) {
     hash  = ((hash << 5) - hash) + input.charCodeAt(i);
@@ -69,7 +69,6 @@ function getHash(input){
   hash = Math.abs(hash);
   return hash;
 }
-const getID = getHash;
 function cleanText(inputText){
   let txt = removeHashTags(inputText);
       txt = removeImages(txt);
@@ -77,3 +76,15 @@ function cleanText(inputText){
       txt = trimSpaces(txt);
   return txt;
 }
+
+let utils = {
+  getHashTags: getHashTags,
+  getAuthors: getAuthors,
+  trimSpaces: trimSpaces,
+  getImages: getImages,
+  removeHashTags: removeHashTags,
+  removeAuthors: removeAuthors,
+  removeImages: removeImages,
+  getID: getID,
+  cleanText: cleanText
+};

@@ -1,3 +1,20 @@
+// let states = {
+  
+//   prevZoom: [],
+//   prevCenter: [],
+//   panelState: "", //list
+// }
+
+// const stateChange = new Event("stateChange");
+// const body = document.body;
+// body.addEventListener("stateChange")
+
+
+
+
+
+
+
 function togglePanel(_state) {
   let body = document.body;
 

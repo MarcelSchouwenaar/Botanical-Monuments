@@ -41,11 +41,21 @@ function filterGallery(){
   console.log("filter:",currentFilter);
 
   let visibleLocations = locations.data.filter(function(location) {
-    var ll = new mapboxgl.LngLat(location.geometry.coordinates[0],location.geometry.coordinates[1]);
+    
+    var ll;
+    
+    if(location.geometry.type == "Polygon"){
+      ll = new mapboxgl.LngLat(location.geometry.coordinates[0][0][0], location.geometry.coordinates[0][0][1]);
+    } else {
+      ll = new mapboxgl.LngLat(location.geometry.coordinates[0],location.geometry.coordinates[1]);
+    }
     
     let isInBounds = bounds.contains(ll);
     let isInFilter = findCommonTags(location.properties.tags, currentFilter);
 
+    console.log("for location ",location.properties.name,": ",ll, isInBounds, isInFilter);
+
+    
     return isInBounds && isInFilter;
   });
 
