@@ -22,24 +22,33 @@
       href="https://api.mapbox.com/mapbox-gl-js/v2.1.1/mapbox-gl.css"
       rel="stylesheet"
     />
-    <link rel="preconnect" href="https://fonts.gstatic.com" />
+    <style>
+      :root{
+        --bg-color: #ffffff;
+        --color: #000000;
+      }
+    </style>
 
-    <link href="style.css" rel="stylesheet" />
     <script src="https://api.mapbox.com/mapbox-gl-js/v2.1.1/mapbox-gl.js"></script>
     <script type="text/javascript" src="js/togeojson.js"></script>
     <script type="text/javascript" src="js/settings.js"></script>
+    <script type="text/javascript" src="js/stateMachine.js"></script>
     <script type="text/javascript" src="js/utils.js"></script>
     <script type="text/javascript" src="js/place.js"></script>
+    <script type="text/javascript" src="js/galleryItem.js"></script>
 
 <!--     <script type="text/javascript" src="js/processLocations.js"></script>
     <script type="text/javascript" src="js/taglist.js"></script>
-    <script type="text/javascript" src="js/filte  r.js"></script>
+    <script type="text/javascript" src="js/filte r.js"></script>
     <script type="text/javascript" src="js/markers.js"></script>
     <script type="text/javascript" src="js/location.js"></script>
     <script type="text/javascript" src="js/gallery.js"></script>
     <script type="text/javascript" src="js/state.js"></script>
     <script type="text/javascript" src="js/emoji.js"></script>
  -->
+
+    <link href="style.css" rel="stylesheet" />
+
     <link
       rel="apple-touch-icon"
       sizes="180x180"
@@ -135,42 +144,35 @@
       }
     </script>
     <script type="text/javascript">
-      mapboxgl.accessToken =
-        "pk.eyJ1IjoidG9vbmtvZWhvcnN0IiwiYSI6ImNqb2ZyYjhiZDAweWIzcXM2aWlhMmJxcGYifQ.OGRL7kejFrWD-MEazU8lTg";
+      
+      mapboxgl.accessToken = MAPBOX_API_KEY;
 
-      let locations = {};
+      // let locations = {};
       let map = null;
-      let prevZoom = undefined;
-      let prevCenter = undefined;
 
       let body = document.body;
-      let panel = document.getElementById("panel");
 
-      let toggle = document.getElementById("toggle");
-      let close = document.getElementById("close");
+      let gallery = document.getElementById("list");
+      let infopanel = document.getElementById("info");
 
-      let menuToggle = document.getElementById("menu-toggle");
+      /*************************************
+      Follywood Magic!
+      **************************************/
+      fetch(GMAP_URL)
+      //get the Google Maps KML
+      .then((response) => response.text())
+      //convert KML into JSON
+      .then(createGeoJSON)
+      //initiate map
+      .then(drawMap)
+      //convert every location in a place
+      .then(createPlaces)
+      //load all images
+      .then(utils.BackgroundLazyLoader)
+      .catch(showError);
 
-      toggle.addEventListener("click", (e) => {
-        togglePanel();
-      });
+      async function createGeoJSON(kml) {
 
-      close.addEventListener("click", (e) => {
-        setState("list");
-      });
-
-      menuToggle.addEventListener("click", (e) => {
-        setState("menu");
-        togglePanel("up");
-      });
-
-      fetch(
-        GMAP_URL
-      )
-        .then((response) => response.text())
-        .then((kml) => {
-          
-        //split the KML up in 3 parts.
           const folder2tag = {
             Locations: "Location",
             Areas: "Area",
@@ -190,60 +192,63 @@
           }
 
           return _locations;
-        })
-
-        .then(drawMap)
-        .then(createPlaces)
-        // .then(processLocations)
-        // .then(createTagList)
-        // .then(createGallery)
-        // .then(filter)
-      .catch(showError);
-
-      async function createPlaces(locations) {
-        locations.forEach((location) => {
-          let place = new Place(location, map);
-        });
-      }
+        }
 
       async function drawMap(locations) {
         map = new mapboxgl.Map({
           container: "map",
           style: MAPBOX_STYLE,
-          center: MAPBOX_CENTER, //51.919340, 4.472671
-          zoom: 12,
+          center: MAPBOX_CENTER,
+          zoom: MAPBOX_DEFAULT_ZOOM,
         });
 
-//         map.on("load", addMarkers);
-//         map.on("load", filter);
-
-//         map.on("load", goToLocation);
-//         window.addEventListener("popstate", goToLocation);
-
-//         map.on("zoomend", filter);
-//         map.on("moveend", filter);
-
-//         let filterEl = document.getElementById("filter");
-//         filterEl
-//           .querySelectorAll("input[type='checkbox']")
-//           .forEach((input) => input.addEventListener("change", filter));
-
         return locations;
+      }
+      
+      async function createPlaces(locations) {
+        locations.forEach((location) => {
+          let place = new Place(location, map, gallery, infopanel);
+        });
       }
       
       function showError(e) {
         console.log(e);
       }
+      /*************************************
+      End Follywood Magic
+      **************************************/
+      
+      let prevZoom = undefined;
+      let prevCenter = undefined;
+      
+      let panel = document.getElementById("panel");
+      let toggle = document.getElementById("toggle");
+      let close = document.getElementById("close");
 
-      function goToLocation() {
-        let params = new URL(document.location).searchParams;
-        let id = params.get("id");
-        if (id) {
-          showLocation(id, "pageLoad");
-        } else {
-          setState("list");
-        }
-      }
+      let menuToggle = document.getElementById("menu-toggle");
+
+      toggle.addEventListener("click", (e) => {
+        togglePanel();
+      });
+
+      close.addEventListener("click", (e) => {
+        stateMachine.setState(STATES.LIST);
+      });
+
+      menuToggle.addEventListener("click", (e) => {
+        stateMachine.setState(STATES.MENU);
+        // togglePanel("up");
+      });
+
+      document.documentElement.style.setProperty("--color", COLOR_FRONT);
+      document.documentElement.style.setProperty("--bg-color", COLOR_BG);
+      document.documentElement.style.setProperty("--highlight-color", COLOR_HIGHLIGHT);
+      document.querySelector('meta[name="msapplication-TileColor"]').setAttribute("content",  COLOR_BG);
+      document.querySelector('meta[name="theme-color"]').setAttribute("content",  COLOR_BG);
+
+      document.getElementById("title").innerHTML = TITLE;
+    
+
     </script>
   </body>
 </html>
