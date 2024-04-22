@@ -1,7 +1,8 @@
-/* :root{
-  --bg-color: #ffffff;
-  --color: #000000;
-} */
+:root{
+/*   --bg-color: #ffffff;
+  --color: #000000; */
+  --panel-height: 200px;
+}
 body,
 html {
   width: 100vw;
@@ -24,7 +25,7 @@ body{
 h1,
 h2,
 h3 {
-  font-weight: lighter;
+  font-weight: normal;
   font-size: 1em;
   line-height: 1.3em;
   padding: 0;
@@ -320,6 +321,13 @@ a:hover{
   opacity: .4;
   transition: all .25s;
 }
+.tagReset{
+  background-color: var(--bg-color);
+  outline: 1px solid var(--color);
+  outline-offset: -1px;
+  color: var(--color);
+  opacity: 0.8;
+}
 #filter .tag:hover{
   transform: scale(1.1);
 /*   background-color: white;
@@ -471,23 +479,23 @@ body[data-panel="down"] .toggle-down{
     position: fixed;
     top: 0;
     left: 0;
-    height: calc(100vh - 120px);
+    height: calc(100vh - var(--panel-height));
     width: 100vw;
   }
   
   #panel{
     border-top: 1px solid var(--color);
-    height: 120px;
+    height: var(--panel-height);
     width: 100vw;
     max-width: none;
   }
   
   body[data-panel="up"] #map{
-    height: 120px;
+    height: var(--panel-height);
   }
   
   body[data-panel="up"] #panel{
-    height: calc(100vh - 120px);
+    height: calc(100vh - var(--panel-height));
   }
   
   

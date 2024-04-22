@@ -5,7 +5,7 @@ class Place {
   images = [];
   tags = [];
   authors = [];
-  marker;
+  place;
   center;
   location;
   gallery;
@@ -13,24 +13,23 @@ class Place {
   infopanel;
 
   constructor(location, map, gallery, infopanel) {
-        
     this.location = location;
     this.map = map;
     this.gallery = gallery;
     this.infopanel = infopanel;
 
+    this.name = this.location.properties.name;
+    this.description = this.#getDescription();
+    this.id = this.#createID();
+
     this.tags = this.#getTags();
     this.images = this.#getImages();
     this.autors = this.#getAuthors();
-    this.description = this.#getDescription();
 
-    this.name = this.location.properties.name;
     this.icon = this.#getIcon();
-    this.id = this.#createID();
     
-    this.center = this.#getCenter();
-    console.log(this.center);
-    
+    this.addPlace();
+
     this.addEventListeners();
     this.addGalleryItem();
   }
@@ -42,14 +41,36 @@ class Place {
     );
   }
   #getTags() {
-    return utils.getHashTags(this.location.properties.description);
+    let allTags = utils.getHashTags(this.location.properties.description);
+    let relevantTags = [];
+
+    let mostSpecificTagIndex = 0;
+
+    allTags.map((tag) => {
+      TAGS.map((tagList) => {
+        let tagIndex = tagList.indexOf(tag);
+        if (tagIndex >= 0) {
+          relevantTags.push(tag);
+          if (tagIndex > mostSpecificTagIndex) {
+            mostSpecificTagIndex = tagIndex;
+            relevantTags.unshift(tag);
+          }
+          if (relevantTags.indexOf(tagList[0]) < 0) relevantTags.push(tagList[0]);
+
+        }
+      });
+    });
+    if (relevantTags.length == 0) relevantTags.push(DEFAULT_TAG);
+
+    return relevantTags;
   }
-  #getImages() { 
-    if(!this.location.properties.gx_media_links) return [PLACEHOLDER_IMAGE];
-    if(this.location.properties.gx_media_links.length < 1) return [PLACEHOLDER_IMAGE];
-   
+  #getImages() {
+    if (!this.location.properties.gx_media_links) return [PLACEHOLDER_IMAGE];
+    if (this.location.properties.gx_media_links.length < 1)
+      return [PLACEHOLDER_IMAGE];
+
     let _images = this.location.properties.gx_media_links;
-    if(_images.indexOf(" ") > 0){
+    if (_images.indexOf(" ") > 0) {
       return this.location.properties.gx_media_links.split(" ");
     } else {
       return [this.location.properties.gx_media_links];
@@ -59,141 +80,121 @@ class Place {
     return utils.cleanText(this.location.properties.description);
   }
   #getIcon() {
-    /*
-      Need to figure this out!
-    */
-    
-    let firstTag = this.tags[0] || undefined;
-    if (!firstTag) return DEFAULT_ICON;
-    return DEFAULT_ICON;
-  }
-  #getCenter(){
-    if(this.location.geometry.type == "Point"){
-      return this.location.geometry.coordinates;
-    } else if(this.location.geometry.type == "Polygon") {
-      let listX = this.location.geometry.coordinates[0].map(p => p[0]);
-      let centerX = (Math.max(...listX) + Math.min(...listX))/2;
-      let listY = this.location.geometry.coordinates[0].map(p => p[1]);
-      let centerY = (Math.max(...listY) + Math.min(...listY))/2;
-      return [centerX, centerY];
-    } else if(this.location.geometry.type == "LineString") {
-      let listX = this.location.geometry.coordinates.map(p => p[0]);
-      let centerX = (Math.max(...listX) + Math.min(...listX))/2;
-      let listY = this.location.geometry.coordinates.map(p => p[1]);
-      let centerY = (Math.max(...listY) + Math.min(...listY))/2;
-      return [centerX, centerY];
-    } else {
-      console.log("Could not find center for ",location.name, " of type ", this.location.geometry.type);
-    }
-      
+    return ICONS[this.tags[0]] || DEFAULT_ICON;
   }
   #createID() {
     return utils.getID(this.name + this.description);
   }
   addEventListeners() {
-    map.on("load", () => this.addPlace());
-    document.body.addEventListener("stateUpdate",e => console.log(e));
+    let self = this;
+    document.body.addEventListener("filterUpdate", (e) => self.verifyFilter());
+    document.body.addEventListener("navigationUpdate", (e) => self.verifyState());
   }
+  verifyState() {
+
+    if (stateMachine.activeId == this.id) {
+      this.showLocation();
+      this.galleryItem.createPage();
+      this.place.activate();
+      return;
+    }
+    this.place.deactivate(); 
+  }
+  verifyFilter(){
+    
+    let match = false;
+    match = (this.checkTagFilter() && this.checkBoundariesFilter());
+
+    if (match) {
+      this.place.show();
+      this.galleryItem.show();
+    } else {
+      this.place.hide();
+      this.galleryItem.hide();
+    }
+    
+  }
+
   addPlace() {
     if (this.location.geometry.type == "Polygon") {
-      this.addArea();
-    } else if(this.location.geometry.type == "Point") {
-      this.addMarker();
-    } else if(this.location.geometry.type == "LineString") {
-      this.addLine();
-    } else {
-      console.log("Could not add feature for ",location.name, " of type ", this.location.geometry.type);
+      this.place = new Area(
+        this.name,
+        this.id,
+        this.location,
+        this.tags,
+        this.setLocation
+      );
+    } else if (this.location.geometry.type == "Point") {
+      this.place = this.marker = new Marker(
+        this.id,
+        this.location,
+        this.icon,
+        this.setLocation
+      );
+    } else if (this.location.geometry.type == "LineString") {
+      this.place = new Line(
+        this.name,
+        this.id,
+        this.location,
+        this.setLocation
+      );
     }
+    this.center = this.place.getCenter();
   }
-  addMarker() {
-    this.marker = document.createElement("div");
-    this.marker.className = "marker";
 
-    this.marker.id = this.id;
-    this.marker.innerHTML = this.icon;
-
-    new mapboxgl.Marker(this.marker)
-      .setLngLat(this.location.geometry.coordinates)
-      .addTo(map);
-
-    this.marker.addEventListener("click", () => this.showLocation());
+  addGalleryItem() {
+    this.galleryItem = new GalleryItem(
+      this.gallery,
+      this.infopanel,
+      this.id,
+      this.name,
+      this.description,
+      this.images,
+      this.authors,
+      this.tags,
+      this.center
+    );
   }
-  addArea() {
-    map.addSource(this.name, {
-      type: "geojson",
-      data: {
-        type: "Feature",
-        geometry: this.location.geometry,
-      },
-    });
 
-    map.addLayer({
-      id: "fill_" + this.id,
-      type: "fill",
-      source: this.name,
-      layout: {},
-      paint: {
-        "fill-color": MAP_AREA_FILL, 
-        "fill-opacity": MAP_AREA_OPACITY,
-      },
-    });
+  checkTagFilter() {
+    let match = false;
 
-    map.addLayer({
-      id: "outline_" + this.id,
-      type: "line",
-      source: this.name,
-      layout: {},
-      paint: {
-        "line-color": MAP_AREA_OUTLINE,
-        "line-width": 1,
-      },
-    });
     const self = this;
-    map.on('click', "fill_" + this.id, e => {
-        self.showLocation()
-    })
-
-  }
-  addLine() {
-    map.addSource(this.name, {
-      type: "geojson",
-      data: {
-        type: "Feature",
-        geometry: this.location.geometry,
-      },
+    
+    filterController.currentFilter.map((tag) => {
+      if (match) return;
+      match = self.tags.indexOf(tag) >= 0;
     });
 
-    map.addLayer({
-      id: "line_" + this.id,
-      type: "line",
-      source: this.name,
-      layout: {},
-      paint: {
-        "line-color": MAP_AREA_OUTLINE,
-        "line-width": 3,
-      },
-    });
-    const self = this;
-    map.on('click', "line_" + this.id, e => {
-      self.showLocation()
-    })
-  }
-  addGalleryItem(){
-    this.galleryItem = new GalleryItem(this.gallery, this.infopanel, this.id, this.name, this.description, this.images, this.authors, this.tags);
+    return match;
   }
 
-  checkTagFilter() {}
+  checkBoundariesFilter() {
+    
+    //see if the location is within boundaries.
+    let bounds = map.getBounds();
+    let isInBounds = bounds.contains(this.center);
+    return isInBounds;
+    
+  }
 
-  checkBoundariesFilter() {}
-  
+  setLocation(e) {
+    let actualId = this.id;
+    let center = this.center;
+
+    if (e.hasOwnProperty("originalEvent")) {
+      //this is to catch an exception from Mapbox
+      console.log('clicked area:',e, e.originalEvent.target);
+      const el = e.originalEvent.target;
+      if(el.classList.contains("marker")) actualId = el.id;
+    }
+
+    stateMachine.navigateTo(STATES.INFO, actualId);
+  }
   showLocation() {
-      let newZoom = (this.map.getZoom() >= MAPBOX_DETAIL_ZOOM) ? this.map.getZoom() : MAPBOX_DETAIL_ZOOM; 
-
-      this.map.flyTo({
-        center: this.center,
-        zoom: MAPBOX_DETAIL_ZOOM
-      });
-
+    this.map.flyTo({
+      center: this.center,
+      zoom: MAPBOX_DETAIL_ZOOM,
+    });
   }
-  
 }

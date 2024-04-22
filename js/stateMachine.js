@@ -1,27 +1,71 @@
-const stateUpdate = new Event("stateUpdate");
 const STATES = {
   LIST: 0,
   INFO: 1,
   MENU: 2,
 };
 
-let state = {
-    state: STATES.LIST,
-    filter: [],
-    prevState: 0,
-    prevZoom: 0,
-    prevCenter: 0,
-    url: "",
-    activeLocation: 0,
-  }
+function togglePanel(_state) {
+  let body = document.body;
 
-let stateMachine = {
-  go: () => {
-    document.body.dispatchEvent(stateUpdate, state);
-    switch (state.state) {
-      case STATES.LIST:
-        document.body.dataset.state = "list";
-        break;
+  let panel = document.getElementById("panel");
+  let state = body.dataset.panel;
+ 
+  if (_state) {
+    body.dataset.panel = _state;
+  } else {
+    body.dataset.panel = (state == "up") ? "down" : "up";
+  }
+  panel.scrollTop = 0;
+}
+
+class StateMachine {
+  prevZoom;
+  prevCenter;
+  self;
+  activeId;
+
+  constructor() {
+    this.prevZoom = MAPBOX_DEFAULT_ZOOM;
+    this.prevCenter = MAPBOX_CENTER;
+    this.self = this;
+    this.aciveId = null;
+  }
+  async init() {
+    console.log("adding event listeners");
+    this.addEventListeners();
+    this.go();
+    return;
+  }
+  addEventListeners() {
+    let self = this;
+    //user navigated back
+    window.addEventListener("popstate", (e) => {
+      console.log("POP", e, e.state);
+      self.go();
+    });
+    //user moved map
+    map.on("moveend", (e) => {
+      self.onMapMoveEnd();
+    });
+  }
+  go() {
+    
+    let url = new URL(document.location);
+
+    let state = url.searchParams.get("state") || STATES.LIST;
+    state = parseInt(state);
+
+    let id = url.searchParams.get("id") || null;
+    id = parseInt(id);
+
+    if (id){
+      this.activeId = id;
+    } else {
+      this.activeId = null;
+    }
+
+    switch (state) {
+
       case STATES.INFO:
         document.body.dataset.state = "info";
         break;
@@ -29,28 +73,41 @@ let stateMachine = {
         document.body.dataset.state = "menu";
         break;
       default:
+
+        console.log("default trigger", this.prevZoom, this.prevCenter);
+        
+        map.flyTo({
+          center: this.prevCenter,
+          zoom: this.prevZoom,
+        });
+        
         document.body.dataset.state = "list";
     }
-  },
-  setState: (newState) => {
-    console.log(newState);
-    state.state = newState;
-    stateMachine.go();
+    document.body.dispatchEvent(navigationUpdate);
   }
-};
+  navigateTo(newState, id) {
+        
+    let url = new URL(document.location);
+    url.searchParams.set("state", newState);
 
-// function goToLocation() {
-//   let params = new URL(document.location).searchParams;
-//   let id = params.get("id");
-//   if (id) {
-//     showLocation(id, "pageLoad");
-//   } else {
-//     setState("list");
-//   }
-// }
+    if (newState == STATES.INFO && !!id) {
+      console.log("setting prevZoom",this.prevZoom);
+      this.prevCenter = map.getCenter();
+      this.prevZoom = map.getZoom();
+      url.searchParams.set("id", id);
+    } else {
+      url.searchParams.delete("id");
+    }
 
-// if(event !== "pageLoad" || event !== "reRender"){
-//   const url = new URL(window.location);
-//   // url.searchParams.set('id', id);
-//   // window.history.pushState({}, '', url);
-// }
+    window.history.pushState({}, "", url);
+    this.go();
+  }
+
+  onMapMoveEnd() {
+    if(!this.activeId){
+      this.prevCenter = map.getCenter();
+      this.prevZoom = map.getZoom();
+    }
+    document.body.dispatchEvent(filterUpdate);
+  }
+}

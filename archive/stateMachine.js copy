@@ -1,0 +1,135 @@
+const STATES = {
+  LIST: 0,
+  INFO: 1,
+  MENU: 2,
+};
+const stateUpdate = new Event("stateUpdate");
+const navigationUpdate = new Event("navigationUpdate");
+const filterUpdate = new Event("filterUpdate");
+
+let state = {
+  state: STATES.LIST,
+  filter: [],
+  prevState: 0,
+  prevZoom: 0,
+  prevCenter: 0,
+  url: "",
+  activeLocationId: 0,
+  panel: "down"
+};
+
+/*
+  Statemachine
+
+  Navigate(id, state)
+  Filter()
+  
+*/
+
+
+
+
+let prevState = state;
+let stateMachine = {};
+
+// window.addEventListener("popstate", e => {
+//   console.log("POP",e, e.state);
+//   state = e.state;
+//   stateMachine.go(true);
+// });
+
+async function initiateStateMachine(){
+  
+  stateMachine = {
+    go: () => {
+
+      let url = new URL(document.location);
+
+
+      switch (state.state) {
+        case STATES.LIST:
+
+          map.flyTo({
+            center: map.getCenter(),
+            zoom: state.prevZoom || MAPBOX_DEFAULT_ZOOM,
+          });
+
+          state.activeLocationId = 0;
+          url.searchParams.delete("id");
+
+          document.body.dataset.state = "list";
+          break;
+        case STATES.INFO:
+          url.searchParams.set("id", state.activeLocationId);
+          document.body.dataset.state = "info";
+          break;
+        case STATES.MENU:
+          state.activeLocationId = 0;
+          url.searchParams.delete("id");
+          document.body.dataset.state = "menu";
+          break;
+        default:
+          state.activeLocationId = 0;
+          document.body.dataset.state = "list";
+      }
+      window.history.pushState(prevState, "", url);
+      prevState = state;
+      document.body.dispatchEvent(stateUpdate, state);
+    },
+    setState: (newState) => {
+      state.state = newState;
+      stateMachine.go();
+    }
+    
+  };
+
+  let startURL = new URL(document.location);
+  let id = startURL.searchParams.get("id");
+
+
+  if(id){
+    state.state = STATES.INFO;
+    state.activeLocationId = id;
+    stateMachine.go();
+  }
+  
+  return;
+  
+}
+
+
+
+
+
+// stateMachine.go();
+// 
+// function goToLocation() {
+//   let params = new URL(document.location).searchParams;
+//   let id = params.get("id");
+//   if (id) {
+//     showLocation(id, "pageLoad");
+//   } else {
+//     setState("list");
+//   }
+// }
+
+// if(event !== "pageLoad" || event !== "reRender"){
+//   const url = new URL(window.location);
+//   // url.searchParams.set('id', id);
+//   // window.history.pushState({}, '', url);
+// }
+/*
+function togglePanel(_state) {
+  let body = document.body;
+
+  let panel = document.getElementById("panel");
+  let state = body.dataset.panel;
+ 
+  if (_state) {
+    body.dataset.panel = _state;
+  } else {
+    body.dataset.panel = (state == "up") ? "down" : "up";
+  }
+  panel.scrollTop = 0;
+}
+*/

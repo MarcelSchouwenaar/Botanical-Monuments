@@ -12,9 +12,6 @@
 
 
 
-
-
-
 function togglePanel(_state) {
   let body = document.body;
 

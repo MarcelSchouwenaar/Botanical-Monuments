@@ -22,30 +22,19 @@
       href="https://api.mapbox.com/mapbox-gl-js/v2.1.1/mapbox-gl.css"
       rel="stylesheet"
     />
-    <style>
-      :root{
-        --bg-color: #ffffff;
-        --color: #000000;
-      }
-    </style>
 
     <script src="https://api.mapbox.com/mapbox-gl-js/v2.1.1/mapbox-gl.js"></script>
     <script type="text/javascript" src="js/togeojson.js"></script>
     <script type="text/javascript" src="js/settings.js"></script>
     <script type="text/javascript" src="js/stateMachine.js"></script>
     <script type="text/javascript" src="js/utils.js"></script>
+    <script type="text/javascript" src="js/patterns.js"></script>
     <script type="text/javascript" src="js/place.js"></script>
+    <script type="text/javascript" src="js/marker.js"></script>
+    <script type="text/javascript" src="js/area.js"></script>
+    <script type="text/javascript" src="js/line.js"></script>
     <script type="text/javascript" src="js/galleryItem.js"></script>
-
-<!--     <script type="text/javascript" src="js/processLocations.js"></script>
-    <script type="text/javascript" src="js/taglist.js"></script>
-    <script type="text/javascript" src="js/filte r.js"></script>
-    <script type="text/javascript" src="js/markers.js"></script>
-    <script type="text/javascript" src="js/location.js"></script>
-    <script type="text/javascript" src="js/gallery.js"></script>
-    <script type="text/javascript" src="js/state.js"></script>
-    <script type="text/javascript" src="js/emoji.js"></script>
- -->
+    <script type="text/javascript" src="js/filter.js"></script>
 
     <link href="style.css" rel="stylesheet" />
 
@@ -75,7 +64,7 @@
   </head>
   <body data-state="list" data-panel="down">
     <div id="map">
-      <div id="filter"></div>
+      <form id="filter"></form>
     </div>
     <div id="panel">
       <div id="topbar">
@@ -144,55 +133,40 @@
       }
     </script>
     <script type="text/javascript">
-      
       mapboxgl.accessToken = MAPBOX_API_KEY;
 
       // let locations = {};
       let map = null;
+      let stateMachine = new StateMachine();
 
       let body = document.body;
+      
+      //const stateUpdate = new Event("stateUpdate");
+      const navigationUpdate = new Event("navigationUpdate");
+      const filterUpdate = new Event("filterUpdate");
 
       let gallery = document.getElementById("list");
       let infopanel = document.getElementById("info");
+      let filter = document.getElementById("filter");
+      let filterController = new Filter(filter);
 
       /*************************************
       Follywood Magic!
       **************************************/
       fetch(GMAP_URL)
-      //get the Google Maps KML
-      .then((response) => response.text())
-      //convert KML into JSON
-      .then(createGeoJSON)
-      //initiate map
-      .then(drawMap)
-      //convert every location in a place
-      .then(createPlaces)
-      //load all images
-      .then(utils.BackgroundLazyLoader)
-      .catch(showError);
+        //get the Google Maps KML
+        .then((response) => response.text())
+        //convert KML into JSON
+        .then(utils.createGeoJSON)
+        //initiate map
+        .then(drawMap)
+        //convert every location in a place
+        .then(createPlaces)
+        //load all images
+        .then(utils.BackgroundLazyLoader)
+        .then(initStateMachine)
+        .catch(showError);
 
-      async function createGeoJSON(kml) {
-
-          const folder2tag = {
-            Locations: "Location",
-            Areas: "Area",
-          };
-
-          let doc = new DOMParser().parseFromString(kml, "text/xml");
-          let doc_folders = doc.getElementsByTagName("Folder");
-          let _locations = [];
-          for (i = 0; i < doc_folders.length; i++) {
-            let tag =
-              folder2tag[
-                doc_folders[i].getElementsByTagName("name")[0].innerHTML
-              ] || "garden";
-            let _locs = toGeoJSON.kml(doc_folders[i], tag).features;
-            _locations = _locations.concat(_locs);
-            console.log(tag, " total: ", _locs.length);
-          }
-
-          return _locations;
-        }
 
       async function drawMap(locations) {
         map = new mapboxgl.Map({
@@ -202,25 +176,39 @@
           zoom: MAPBOX_DEFAULT_ZOOM,
         });
 
+        map.setMaxPitch(0);
+        map.setMinPitch(0);
+        
+        await new Promise((resolve, reject) => {
+          map.on("load", () => {
+            resolve(); // Resolve the Promise with the map object when it's loaded
+          });
+        });
+        
         return locations;
       }
-      
+
       async function createPlaces(locations) {
         locations.forEach((location) => {
           let place = new Place(location, map, gallery, infopanel);
         });
       }
       
+      async function initStateMachine(){
+        await stateMachine.init();
+        return;
+      }
+
       function showError(e) {
         console.log(e);
       }
       /*************************************
       End Follywood Magic
       **************************************/
-      
+
       let prevZoom = undefined;
       let prevCenter = undefined;
-      
+
       let panel = document.getElementById("panel");
       let toggle = document.getElementById("toggle");
       let close = document.getElementById("close");
@@ -232,23 +220,31 @@
       });
 
       close.addEventListener("click", (e) => {
-        stateMachine.setState(STATES.LIST);
+        stateMachine.navigateTo(STATES.LIST);
       });
 
       menuToggle.addEventListener("click", (e) => {
-        stateMachine.setState(STATES.MENU);
-        // togglePanel("up");
+        stateMachine.navigateTo(STATES.MENU);
+        togglePanel("up");
       });
 
       document.documentElement.style.setProperty("--color", COLOR_FRONT);
       document.documentElement.style.setProperty("--bg-color", COLOR_BG);
-      document.documentElement.style.setProperty("--highlight-color", COLOR_HIGHLIGHT);
-      document.querySelector('meta[name="msapplication-TileColor"]').setAttribute("content",  COLOR_BG);
-      document.querySelector('meta[name="theme-color"]').setAttribute("content",  COLOR_BG);
+      document.documentElement.style.setProperty(
+        "--highlight-color",
+        COLOR_HIGHLIGHT
+      );
+      document
+        .querySelector('meta[name="msapplication-TileColor"]')
+        .setAttribute("content", COLOR_BG);
+      document
+        .querySelector('meta[name="theme-color"]')
+        .setAttribute("content", COLOR_BG);
+      document.querySelectorAll("path").forEach((el) => {
+        el.setAttribute("style", "fill:" + COLOR_FRONT);
+      });
 
       document.getElementById("title").innerHTML = TITLE;
-    
-
     </script>
   </body>
 </html>
