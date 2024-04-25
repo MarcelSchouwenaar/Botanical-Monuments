@@ -1,7 +1,10 @@
 :root{
-/*   --bg-color: #ffffff;
-  --color: #000000; */
+  --bg-color: #ffffff;
+  --color: #000000;
+  --highlight: #0000ff;
   --panel-height: 200px;
+  --default-font-family: -apple-system, BlinkMacSystemFont, avenir next, avenir, segoe ui, helvetica neue, helvetica, Cantarell, Ubuntu, roboto, noto, arial, sans-serif;
+
 }
 body,
 html {
@@ -9,7 +12,7 @@ html {
   height: 100vh;
   padding: 0;
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, avenir next, avenir, segoe ui, helvetica neue, helvetica, Cantarell, Ubuntu, roboto, noto, arial, sans-serif;
+  font-family: var(--default-font-family);
   line-height: 1.3em;
   font-weight: 400;
   background-color: var(--bg-color);
@@ -107,6 +110,9 @@ a:hover{
      font-size: 36px;
      right: 10px;
  }
+.marker:hover{
+  font-size: 40px;
+}
 
 #panel {
   position: absolute;
@@ -305,7 +311,7 @@ a:hover{
 }
 
 .tag {
-  font-family: 'Inter', sans-serif;
+  font-family: var(--default-font-family);
   font-weight: 400;
   text-transform: capitalize;
   font-size: 24px !important;
@@ -317,7 +323,7 @@ a:hover{
   border-radius: 20px;
   margin: 0 .3em .3em 0;
   background-color: white;
-  color: #666;
+  color: black;
   opacity: .4;
   transition: all .25s;
 }
@@ -330,8 +336,6 @@ a:hover{
 }
 #filter .tag:hover{
   transform: scale(1.1);
-/*   background-color: white;
-  color: #999; */
 }
 #info .tag{
   border: 1px solid var(--color);
@@ -341,7 +345,7 @@ a:hover{
   display: none;
 }
 .tagLbl input:checked ~ .tag {
-  background-color: var(--bg-color);
+  background-color: var(--highlight-color);
   color: var(--color);
   opacity: 0.8;
 }

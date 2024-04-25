@@ -11,13 +11,18 @@ class Place {
   gallery;
   galleryItem;
   infopanel;
+  filterController;
+  stateMachine;
 
-  constructor(location, map, gallery, infopanel) {
+  constructor(location, map, gallery, infopanel, filterController,stateMachine) {
     this.location = location;
     this.map = map;
     this.gallery = gallery;
     this.infopanel = infopanel;
-
+    this.filterController = filterController;
+    this.stateMachine = stateMachine;
+    console.log("statemachine",this.stateMachine);
+    
     this.name = this.location.properties.name;
     this.description = this.#getDescription();
     this.id = this.#createID();
@@ -91,8 +96,9 @@ class Place {
     document.body.addEventListener("navigationUpdate", (e) => self.verifyState());
   }
   verifyState() {
-
-    if (stateMachine.activeId == this.id) {
+    console.log("verifying state...");
+    if (this.stateMachine.activeId == this.id) {
+      console.log("that's me!!",this.id);
       this.showLocation();
       this.galleryItem.createPage();
       this.place.activate();
@@ -101,7 +107,7 @@ class Place {
     this.place.deactivate(); 
   }
   verifyFilter(){
-    
+
     let match = false;
     match = (this.checkTagFilter() && this.checkBoundariesFilter());
 
@@ -120,23 +126,29 @@ class Place {
       this.place = new Area(
         this.name,
         this.id,
+        this.map,
         this.location,
         this.tags,
-        this.setLocation
+        this.setLocation,
+        this.stateMachine
       );
     } else if (this.location.geometry.type == "Point") {
       this.place = this.marker = new Marker(
         this.id,
+        this.map,
         this.location,
         this.icon,
-        this.setLocation
+        this.setLocation,
+        this.stateMachine
       );
     } else if (this.location.geometry.type == "LineString") {
       this.place = new Line(
         this.name,
         this.id,
+        this.map,
         this.location,
-        this.setLocation
+        this.setLocation,
+        this.stateMachine
       );
     }
     this.center = this.place.getCenter();
@@ -152,7 +164,8 @@ class Place {
       this.images,
       this.authors,
       this.tags,
-      this.center
+      this.center,
+      this.stateMachine
     );
   }
 
@@ -161,7 +174,7 @@ class Place {
 
     const self = this;
     
-    filterController.currentFilter.map((tag) => {
+    this.filterController.currentFilter.map((tag) => {
       if (match) return;
       match = self.tags.indexOf(tag) >= 0;
     });
@@ -172,13 +185,16 @@ class Place {
   checkBoundariesFilter() {
     
     //see if the location is within boundaries.
-    let bounds = map.getBounds();
+    let bounds = this.map.getBounds();
     let isInBounds = bounds.contains(this.center);
     return isInBounds;
     
   }
 
   setLocation(e) {
+    
+    console.log("CLICK: stateMachine",this.stateMachine, e, this.id);
+
     let actualId = this.id;
     let center = this.center;
 
@@ -188,8 +204,8 @@ class Place {
       const el = e.originalEvent.target;
       if(el.classList.contains("marker")) actualId = el.id;
     }
-
-    stateMachine.navigateTo(STATES.INFO, actualId);
+   
+    this.stateMachine.navigateTo(STATES.INFO, actualId);
   }
   showLocation() {
     this.map.flyTo({

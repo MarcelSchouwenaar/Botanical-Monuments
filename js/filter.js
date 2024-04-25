@@ -4,6 +4,7 @@ class Filter {
   tagList;
   firstClick;
   currentFilter;
+  filterEvent = new Event("filterUpdate");
 
   constructor(parent) {
     this.parent = parent;
@@ -57,7 +58,7 @@ class Filter {
     this.currentFilter = _currentFilter;
    
     console.log("\n\n\n\ SET FILTER ",this.currentFilter);
-    document.body.dispatchEvent(filterUpdate);
+    document.body.dispatchEvent(this.filterEvent);
     
   }
 

@@ -1,3 +1,5 @@
+
+
 const STATES = {
   LIST: 0,
   INFO: 1,
@@ -23,12 +25,16 @@ class StateMachine {
   prevCenter;
   self;
   activeId;
+  map;
+  filterEvent = new Event("filterUpdate");
+  navigationEvent = new Event("navigationUpdate");
 
-  constructor() {
+  constructor(map) {
     this.prevZoom = MAPBOX_DEFAULT_ZOOM;
     this.prevCenter = MAPBOX_CENTER;
     this.self = this;
-    this.aciveId = null;
+    this.map = map;
+    this.activeId = null;
   }
   async init() {
     console.log("adding event listeners");
@@ -44,7 +50,7 @@ class StateMachine {
       self.go();
     });
     //user moved map
-    map.on("moveend", (e) => {
+    this.map.on("moveend", (e) => {
       self.onMapMoveEnd();
     });
   }
@@ -76,14 +82,14 @@ class StateMachine {
 
         console.log("default trigger", this.prevZoom, this.prevCenter);
         
-        map.flyTo({
+        this.map.flyTo({
           center: this.prevCenter,
           zoom: this.prevZoom,
         });
         
         document.body.dataset.state = "list";
     }
-    document.body.dispatchEvent(navigationUpdate);
+    document.body.dispatchEvent(this.navigationEvent);
   }
   navigateTo(newState, id) {
         
@@ -92,8 +98,8 @@ class StateMachine {
 
     if (newState == STATES.INFO && !!id) {
       console.log("setting prevZoom",this.prevZoom);
-      this.prevCenter = map.getCenter();
-      this.prevZoom = map.getZoom();
+      this.prevCenter = this.map.getCenter();
+      this.prevZoom = this.map.getZoom();
       url.searchParams.set("id", id);
     } else {
       url.searchParams.delete("id");
@@ -105,9 +111,9 @@ class StateMachine {
 
   onMapMoveEnd() {
     if(!this.activeId){
-      this.prevCenter = map.getCenter();
-      this.prevZoom = map.getZoom();
+      this.prevCenter = this.map.getCenter();
+      this.prevZoom = this.map.getZoom();
     }
-    document.body.dispatchEvent(filterUpdate);
+    document.body.dispatchEvent(this.filterEvent);
   }
 }

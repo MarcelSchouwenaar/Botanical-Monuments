@@ -3,11 +3,15 @@ class Marker{
   marker;
   icon;
   location;
+  map;
+  stateMachine;
   
-  constructor(id, location, icon, callback){
+  constructor(id, map, location, icon, callback, stateMachine){
     
     this.callback = callback;
     this.id = id;
+    this.map = map;
+    this.stateMachine = stateMachine;
     
     this.marker = document.createElement("div");
     this.marker.id = this.id;
@@ -21,10 +25,11 @@ class Marker{
 
     new mapboxgl.Marker(this.marker)
       .setLngLat(location.geometry.coordinates)
-      .addTo(map);
+      .addTo(this.map);
     
     const self = this;
-    this.marker.addEventListener("click", (e) => self.callback(e));
+    // this.marker.addEventListener("click", (e) => self.callback(e));
+    this.marker.addEventListener("click",e => this.setLocation(e));
   }
   getCenter(){
     return this.location.geometry.coordinates;
@@ -41,7 +46,19 @@ class Marker{
   deactivate(){
     this.marker.classList.remove("marker_active");
   }
-  
+  setLocation(e){
+    let actualId = this.id;
+    // let center = this.center;
+
+    if (e.hasOwnProperty("originalEvent")) {
+      //this is to catch an exception from Mapbox
+      console.log('clicked area:',e, e.originalEvent.target);
+      const el = e.originalEvent.target;
+      if(el.classList.contains("marker")) actualId = el.id;
+    }
+   
+    this.stateMachine.navigateTo(STATES.INFO, actualId);
+  }
   
   
 }

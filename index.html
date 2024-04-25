@@ -24,8 +24,8 @@
     />
 
     <script src="https://api.mapbox.com/mapbox-gl-js/v2.1.1/mapbox-gl.js"></script>
+    <script type="text/javascript" src="settings.js"></script>
     <script type="text/javascript" src="js/togeojson.js"></script>
-    <script type="text/javascript" src="js/settings.js"></script>
     <script type="text/javascript" src="js/stateMachine.js"></script>
     <script type="text/javascript" src="js/utils.js"></script>
     <script type="text/javascript" src="js/patterns.js"></script>
@@ -35,32 +35,35 @@
     <script type="text/javascript" src="js/line.js"></script>
     <script type="text/javascript" src="js/galleryItem.js"></script>
     <script type="text/javascript" src="js/filter.js"></script>
+    
+    <script type="module" src="js/manifest.js"></script>
+    
+    <script type="module" src="app.js" defer></script>
 
     <link href="style.css" rel="stylesheet" />
 
     <link
       rel="apple-touch-icon"
       sizes="180x180"
-      href="https://cdn.glitch.com/35c0f702-4b7f-4512-89ca-8f32ca8189c1%2Fapple-touch-icon.png?v=1615280287521"
+      id="apple-touch-icon-180"
     />
     <link
       rel="icon"
       type="image/png"
       sizes="32x32"
-      href="https://cdn.glitch.com/35c0f702-4b7f-4512-89ca-8f32ca8189c1%2Ffavicon-32x32.png?v=1615280287563"
+      id="apple-touch-icon-32"
     />
     <link
       rel="icon"
       type="image/png"
       sizes="16x16"
-      href="https://cdn.glitch.com/35c0f702-4b7f-4512-89ca-8f32ca8189c1%2Ffavicon-16x16.png?v=1615280287161"
+      id="apple-touch-icon-16"
     />
-    <link
-      rel="manifest"
-      href="https://cdn.glitch.com/35c0f702-4b7f-4512-89ca-8f32ca8189c1%2Fsite.webmanifest?v=1615280287438"
-    />
-    <meta name="msapplication-TileColor" content="#003429" />
-    <meta name="theme-color" content="#003429" />
+    <link rel="manifest" id="manifest-placeholder">
+    <meta name="msapplication-TileColor" id="tile-color-placeholder" content="#003429" />
+    <meta name="theme-color" id="theme-color-placeholder" content="#003429" />
+    <link rel="icon" type="image/png" id="favicon-placeholder" />
+    
   </head>
   <body data-state="list" data-panel="down">
     <div id="map">
@@ -124,127 +127,12 @@
         </div>
       </div>
     </div>
-
-    <script>
+    <script type="text/javascript">
       if (location.protocol != "https:") {
         location.href =
           "https:" +
           window.location.href.substring(window.location.protocol.length);
       }
-    </script>
-    <script type="text/javascript">
-      mapboxgl.accessToken = MAPBOX_API_KEY;
-
-      // let locations = {};
-      let map = null;
-      let stateMachine = new StateMachine();
-
-      let body = document.body;
-      
-      //const stateUpdate = new Event("stateUpdate");
-      const navigationUpdate = new Event("navigationUpdate");
-      const filterUpdate = new Event("filterUpdate");
-
-      let gallery = document.getElementById("list");
-      let infopanel = document.getElementById("info");
-      let filter = document.getElementById("filter");
-      let filterController = new Filter(filter);
-
-      /*************************************
-      Follywood Magic!
-      **************************************/
-      fetch(GMAP_URL)
-        //get the Google Maps KML
-        .then((response) => response.text())
-        //convert KML into JSON
-        .then(utils.createGeoJSON)
-        //initiate map
-        .then(drawMap)
-        //convert every location in a place
-        .then(createPlaces)
-        //load all images
-        .then(utils.BackgroundLazyLoader)
-        .then(initStateMachine)
-        .catch(showError);
-
-
-      async function drawMap(locations) {
-        map = new mapboxgl.Map({
-          container: "map",
-          style: MAPBOX_STYLE,
-          center: MAPBOX_CENTER,
-          zoom: MAPBOX_DEFAULT_ZOOM,
-        });
-
-        map.setMaxPitch(0);
-        map.setMinPitch(0);
-        
-        await new Promise((resolve, reject) => {
-          map.on("load", () => {
-            resolve(); // Resolve the Promise with the map object when it's loaded
-          });
-        });
-        
-        return locations;
-      }
-
-      async function createPlaces(locations) {
-        locations.forEach((location) => {
-          let place = new Place(location, map, gallery, infopanel);
-        });
-      }
-      
-      async function initStateMachine(){
-        await stateMachine.init();
-        return;
-      }
-
-      function showError(e) {
-        console.log(e);
-      }
-      /*************************************
-      End Follywood Magic
-      **************************************/
-
-      let prevZoom = undefined;
-      let prevCenter = undefined;
-
-      let panel = document.getElementById("panel");
-      let toggle = document.getElementById("toggle");
-      let close = document.getElementById("close");
-
-      let menuToggle = document.getElementById("menu-toggle");
-
-      toggle.addEventListener("click", (e) => {
-        togglePanel();
-      });
-
-      close.addEventListener("click", (e) => {
-        stateMachine.navigateTo(STATES.LIST);
-      });
-
-      menuToggle.addEventListener("click", (e) => {
-        stateMachine.navigateTo(STATES.MENU);
-        togglePanel("up");
-      });
-
-      document.documentElement.style.setProperty("--color", COLOR_FRONT);
-      document.documentElement.style.setProperty("--bg-color", COLOR_BG);
-      document.documentElement.style.setProperty(
-        "--highlight-color",
-        COLOR_HIGHLIGHT
-      );
-      document
-        .querySelector('meta[name="msapplication-TileColor"]')
-        .setAttribute("content", COLOR_BG);
-      document
-        .querySelector('meta[name="theme-color"]')
-        .setAttribute("content", COLOR_BG);
-      document.querySelectorAll("path").forEach((el) => {
-        el.setAttribute("style", "fill:" + COLOR_FRONT);
-      });
-
-      document.getElementById("title").innerHTML = TITLE;
     </script>
   </body>
 </html>

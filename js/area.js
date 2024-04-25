@@ -3,12 +3,16 @@ class Area {
   id;
   location;
   callback;
+  map;
+  stateMachine;
 
-  constructor(name, id, location, tags, callback) {
+  constructor(name, id, map, location, tags, callback, stateMachine) {
     this.name = name;
     this.id = id;
+    this.map = map;
     this.location = location;
     this.callback = callback;
+    this.stateMachine = stateMachine;
     this.tags = tags
     this.addArea();
   }
@@ -20,18 +24,18 @@ class Area {
     img.src = pattern;
     // gallery.appendChild(img);
 
-    map.addSource(this.name, {
+    this.map.addSource(this.name, {
       type: "geojson",
       data: {
         type: "Feature",
         geometry: this.location.geometry,
       },
     });
-    map.loadImage(pattern, (err, image) => {
+    this.map.loadImage(pattern, (err, image) => {
       if (err) throw err;
-      map.addImage("pattern_" + this.id, image);
+      this.map.addImage("pattern_" + this.id, image);
     });
-    map.addLayer({
+    this.map.addLayer({
       id: "fill_" + this.id,
       type: "fill",
       source: this.name,
@@ -42,9 +46,23 @@ class Area {
         // "fill-opacity": MAP_AREA_OPACITY,
       },
     });
+     this.map.addLayer({
+      id: "line_" + this.id,
+      type: "line",
+      source: this.name,
+      layout: {},
+      paint: {
+        "line-color": MAP_AREA_HOVER_OUTLINE,
+        "line-width": 3,
+        "line-opacity" : 0
+      },
+    });
 
-    map.on("click", "fill_" + this.id, (e) => self.callback(e));
+    this.map.on("click", "fill_" + this.id, (e) => this.setLocation(e));
+    this.map.on('mousemove', "fill_" + this.id, (e) => self.onMouseMove(e));
+    this.map.on('mouseleave', "fill_" + this.id, (e) => self.onMouseLeave(e));
   }
+  
   getCenter() {
     let listX = this.location.geometry.coordinates[0].map((p) => p[0]);
     let centerX = (Math.max(...listX) + Math.min(...listX)) / 2;
@@ -54,11 +72,11 @@ class Area {
   }
 
   show() {
-    // map.setLayoutProperty("fill_" + this.id, "visibility", "visible");
+    // this.map.setLayoutProperty("fill_" + this.id, "visibility", "visible");
   }
 
   hide() {
-    // map.setLayoutProperty("fill_" + this.id, "visibility", "none");
+    // this.map.setLayoutProperty("fill_" + this.id, "visibility", "none");
   }
   activate(){
     // console.log("activate area");
@@ -66,4 +84,28 @@ class Area {
   deactivate(){
     // console.log("deactivate area");
   }
+  onMouseMove(){
+    console.log("mouseMove");
+    this.map.setPaintProperty("line_" + this.id,"line-opacity",1);
+    this.map.setPaintProperty("fill_" + this.id,"fill-opacity",MAP_AREA_HOVER_OPACITY);
+    
+  }
+  onMouseLeave(){
+    this.map.setPaintProperty("line_" + this.id,"line-opacity",0);
+    this.map.setPaintProperty("fill_" + this.id,"fill-opacity",1);
+  }
+  setLocation(e){
+    let actualId = this.id;
+    // let center = this.center;
+
+    if (e.hasOwnProperty("originalEvent")) {
+      //this is to catch an exception from Mapbox
+      console.log('clicked area:',e, e.originalEvent.target);
+      const el = e.originalEvent.target;
+      if(el.classList.contains("marker")) actualId = el.id;
+    }
+   
+    this.stateMachine.navigateTo(STATES.INFO, actualId);
+  }
+  
 }

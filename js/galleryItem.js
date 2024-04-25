@@ -7,6 +7,7 @@ class GalleryItem {
   images;
   tags;
   center;
+  stateMachine;
 
   constructor(
     gallery,
@@ -17,7 +18,8 @@ class GalleryItem {
     images,
     authors,
     tags,
-    center
+    center,
+    stateMachine
   ) {
     this.gallery = gallery;
     this.infopanel = infopanel;
@@ -28,7 +30,8 @@ class GalleryItem {
     this.authors = authors;
     this.images = images;
     this.tags = tags;
-      
+    this.stateMachine = stateMachine;
+
     this.center = center;
 
     this.createThumbnail();
@@ -48,7 +51,7 @@ class GalleryItem {
     this.gallery.appendChild(this.thumbnail);
   }
   setLocation() {
-    stateMachine.navigateTo(STATES.INFO, this.id);
+    this.stateMachine.navigateTo(STATES.INFO, this.id);
   }
   verifyState() {
     if (state.activeLocationId == this.id) {
@@ -83,7 +86,9 @@ class GalleryItem {
           ${this.tags.map((tag) => `<span class=''>${tag}</span>`).join(", ")}
         </p>      
         <p>
-          <a target="_blank" href="https://www.google.com/maps/search/?api=1&query=${this.center[1]},${this.center[0]}" class="button">Google Maps</a>
+          <a target="_blank" href="https://www.google.com/maps/search/?api=1&query=${
+            this.center[1]
+          },${this.center[0]}" class="button">Google Maps</a>
         </p>
        
       `;
@@ -104,10 +109,10 @@ class GalleryItem {
 
     _images.forEach((image) => image.addEventListener("click", nextImage));
   }
-  show(){
+  show() {
     this.thumbnail.style.display = "block";
   }
-  hide(){
-    this.thumbnail.style.display = "none";    
+  hide() {
+    this.thumbnail.style.display = "none";
   }
 }
