@@ -1,4 +1,12 @@
-class Place {
+import * as settings    from "../settings.js";
+import * as utils       from "./utils.js";
+
+import { Area }         from "./area.js";
+import { Marker }       from "./marker.js";
+import { Line }         from "./line.js";
+import { GalleryItem }  from "./galleryItem.js";
+
+export class Place {
   id;
   description;
   map;
@@ -14,15 +22,21 @@ class Place {
   filterController;
   stateMachine;
 
-  constructor(location, map, gallery, infopanel, filterController,stateMachine) {
+  constructor(
+    location,
+    map,
+    gallery,
+    infopanel,
+    filterController,
+    stateMachine
+  ) {
     this.location = location;
     this.map = map;
-    this.gallery = gallery;
-    this.infopanel = infopanel;
+    this.gallery = document.getElementById(gallery);
+    this.infopanel = document.getElementById(infopanel);
     this.filterController = filterController;
     this.stateMachine = stateMachine;
-    console.log("statemachine",this.stateMachine);
-    
+
     this.name = this.location.properties.name;
     this.description = this.#getDescription();
     this.id = this.#createID();
@@ -32,7 +46,7 @@ class Place {
     this.autors = this.#getAuthors();
 
     this.icon = this.#getIcon();
-    
+
     this.addPlace();
 
     this.addEventListeners();
@@ -42,7 +56,7 @@ class Place {
   #getAuthors() {
     return utils.getAuthors(
       this.location.properties.description,
-      DEFAULT_AUTHOR
+      settings.DEFAULT_AUTHOR
     );
   }
   #getTags() {
@@ -52,7 +66,7 @@ class Place {
     let mostSpecificTagIndex = 0;
 
     allTags.map((tag) => {
-      TAGS.map((tagList) => {
+      settings.TAGS.map((tagList) => {
         let tagIndex = tagList.indexOf(tag);
         if (tagIndex >= 0) {
           relevantTags.push(tag);
@@ -60,19 +74,20 @@ class Place {
             mostSpecificTagIndex = tagIndex;
             relevantTags.unshift(tag);
           }
-          if (relevantTags.indexOf(tagList[0]) < 0) relevantTags.push(tagList[0]);
-
+          if (relevantTags.indexOf(tagList[0]) < 0)
+            relevantTags.push(tagList[0]);
         }
       });
     });
-    if (relevantTags.length == 0) relevantTags.push(DEFAULT_TAG);
+    if (relevantTags.length == 0) relevantTags.push(settings.DEFAULT_TAG);
 
     return relevantTags;
   }
   #getImages() {
-    if (!this.location.properties.gx_media_links) return [PLACEHOLDER_IMAGE];
+    if (!this.location.properties.gx_media_links)
+      return [settings.PLACEHOLDER_IMAGE];
     if (this.location.properties.gx_media_links.length < 1)
-      return [PLACEHOLDER_IMAGE];
+      return [settings.PLACEHOLDER_IMAGE];
 
     let _images = this.location.properties.gx_media_links;
     if (_images.indexOf(" ") > 0) {
@@ -85,7 +100,7 @@ class Place {
     return utils.cleanText(this.location.properties.description);
   }
   #getIcon() {
-    return ICONS[this.tags[0]] || DEFAULT_ICON;
+    return settings.ICONS[this.tags[0]] || settings.DEFAULT_ICON;
   }
   #createID() {
     return utils.getID(this.name + this.description);
@@ -93,23 +108,24 @@ class Place {
   addEventListeners() {
     let self = this;
     document.body.addEventListener("filterUpdate", (e) => self.verifyFilter());
-    document.body.addEventListener("navigationUpdate", (e) => self.verifyState());
+    document.body.addEventListener("navigationUpdate", (e) =>
+      self.verifyState()
+    );
   }
   verifyState() {
     console.log("verifying state...");
     if (this.stateMachine.activeId == this.id) {
-      console.log("that's me!!",this.id);
+      console.log("that's me!!", this.id);
       this.showLocation();
       this.galleryItem.createPage();
       this.place.activate();
       return;
     }
-    this.place.deactivate(); 
+    this.place.deactivate();
   }
-  verifyFilter(){
-
+  verifyFilter() {
     let match = false;
-    match = (this.checkTagFilter() && this.checkBoundariesFilter());
+    match = this.checkTagFilter() && this.checkBoundariesFilter();
 
     if (match) {
       this.place.show();
@@ -118,7 +134,6 @@ class Place {
       this.place.hide();
       this.galleryItem.hide();
     }
-    
   }
 
   addPlace() {
@@ -173,7 +188,7 @@ class Place {
     let match = false;
 
     const self = this;
-    
+
     this.filterController.currentFilter.map((tag) => {
       if (match) return;
       match = self.tags.indexOf(tag) >= 0;
@@ -183,34 +198,31 @@ class Place {
   }
 
   checkBoundariesFilter() {
-    
     //see if the location is within boundaries.
     let bounds = this.map.getBounds();
     let isInBounds = bounds.contains(this.center);
     return isInBounds;
-    
   }
 
   setLocation(e) {
-    
-    console.log("CLICK: stateMachine",this.stateMachine, e, this.id);
+    console.log("CLICK: stateMachine", this.stateMachine, e, this.id);
 
     let actualId = this.id;
     let center = this.center;
 
     if (e.hasOwnProperty("originalEvent")) {
       //this is to catch an exception from Mapbox
-      console.log('clicked area:',e, e.originalEvent.target);
+      console.log("clicked area:", e, e.originalEvent.target);
       const el = e.originalEvent.target;
-      if(el.classList.contains("marker")) actualId = el.id;
+      if (el.classList.contains("marker")) actualId = el.id;
     }
-   
-    this.stateMachine.navigateTo(STATES.INFO, actualId);
+
+    this.stateMachine.navigateTo(settings.STATES.INFO, actualId);
   }
   showLocation() {
     this.map.flyTo({
       center: this.center,
-      zoom: MAPBOX_DETAIL_ZOOM,
+      zoom: settings.MAPBOX_DETAIL_ZOOM,
     });
   }
 }

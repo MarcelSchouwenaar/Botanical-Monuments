@@ -1,4 +1,5 @@
-var toGeoJSON = (function() {
+export const toGeoJSON = (function() {
+    
     'use strict';
 
     var removeSpace = /\s*/g,
@@ -464,4 +465,4 @@ var toGeoJSON = (function() {
     return t;
 })();
 
-if (typeof module !== 'undefined') module.exports = toGeoJSON;
+// module.exports = toGeoJSON;

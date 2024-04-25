@@ -1,4 +1,8 @@
-class Area {
+import {PatternMaker} from "./patterns.js";
+import * as settings from "../settings.js";
+
+
+export class Area {
   name;
   id;
   location;
@@ -42,8 +46,8 @@ class Area {
       layout: {},
       paint: {
         "fill-pattern": "pattern_" + this.id,
-        // "fill-color": MAP_AREA_FILL,
-        // "fill-opacity": MAP_AREA_OPACITY,
+        // "fill-color": settings.MAP_AREA_FILL,
+        // "fill-opacity": settings.MAP_AREA_OPACITY,
       },
     });
      this.map.addLayer({
@@ -52,7 +56,7 @@ class Area {
       source: this.name,
       layout: {},
       paint: {
-        "line-color": MAP_AREA_HOVER_OUTLINE,
+        "line-color": settings.MAP_AREA_HOVER_OUTLINE,
         "line-width": 3,
         "line-opacity" : 0
       },
@@ -87,7 +91,7 @@ class Area {
   onMouseMove(){
     console.log("mouseMove");
     this.map.setPaintProperty("line_" + this.id,"line-opacity",1);
-    this.map.setPaintProperty("fill_" + this.id,"fill-opacity",MAP_AREA_HOVER_OPACITY);
+    this.map.setPaintProperty("fill_" + this.id,"fill-opacity",settings.MAP_AREA_HOVER_OPACITY);
     
   }
   onMouseLeave(){
@@ -105,7 +109,7 @@ class Area {
       if(el.classList.contains("marker")) actualId = el.id;
     }
    
-    this.stateMachine.navigateTo(STATES.INFO, actualId);
+    this.stateMachine.navigateTo(settings.STATES.INFO, actualId);
   }
   
 }

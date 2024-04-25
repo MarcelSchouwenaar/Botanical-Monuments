@@ -1,4 +1,6 @@
-class Filter {
+import * as settings from "../settings.js";
+
+export class Filter {
   
   parent;
   tagList;
@@ -7,7 +9,7 @@ class Filter {
   filterEvent = new Event("filterUpdate");
 
   constructor(parent) {
-    this.parent = parent;
+    this.parent = document.getElementById(parent);
     this.addFilterTags();
     this.setFilter();  
     this.firstClick = true;
@@ -21,7 +23,7 @@ class Filter {
   }
   addFilterTags() {
     const self = this;
-    TAGS.map((tagList) => {
+    settings.TAGS.map((tagList) => {
       tagList.map((tag, i) => {
         let el = self.getFilterTag(tag, i);
         el.querySelector("input").addEventListener("change",e => self.changed(e))
@@ -57,7 +59,6 @@ class Filter {
     
     this.currentFilter = _currentFilter;
    
-    console.log("\n\n\n\ SET FILTER ",this.currentFilter);
     document.body.dispatchEvent(this.filterEvent);
     
   }

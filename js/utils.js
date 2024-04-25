@@ -1,5 +1,6 @@
+import { toGeoJSON }          from "./togeojson.js";
 
-function getHashTags(inputText) {
+export function getHashTags(inputText) {
   let regex = /\#([a-zA-Z_\d]+)/gm;
 
   let matches = [];
@@ -13,7 +14,7 @@ function getHashTags(inputText) {
   return matches;
 }
 
-function getAuthors(inputText, defaultAuthor) {
+export function getAuthors(inputText, defaultAuthor) {
   let regex = /(?:^|\s)(?:@)([a-zA-Z\d]+)/gm;
   let matches = [];
   let match;
@@ -27,11 +28,11 @@ function getAuthors(inputText, defaultAuthor) {
 
   return matches;
 }
-function trimSpaces(inputText) {
+export function trimSpaces(inputText) {
   return inputText.replace(/^(\s*<br( \/)?>)*|(<br( \/)?>\s*)*$/gm, "");
 }
 
-function getImages(inputText) {
+export function getImages(inputText) {
   let regex = /<img[^>]*>/g;
   let matches = [];
   let match;
@@ -43,16 +44,16 @@ function getImages(inputText) {
   return matches;
 }
 
-function removeHashTags(inputText) {
+export function removeHashTags(inputText) {
   let regex = new RegExp("#([^\\s]*)", "g");
   return inputText.replace(regex, "");
 }
 
-function removeAuthors(inputText) {
+export function removeAuthors(inputText) {
   let regex = new RegExp("@([^\\s]*)", "g");
   return inputText.replace(regex, "");
 }
-function removeImages(inputText) {
+export function removeImages(inputText) {
   let regex = /<img[^>]*>/g;
   inputText = inputText.replace(regex, "");
 
@@ -61,7 +62,7 @@ function removeImages(inputText) {
 
   return inputText;
 }
-function getID(input) {
+export function getID(input) {
   var hash = 0,
     len = input.length;
   for (var i = 0; i < len; i++) {
@@ -71,7 +72,7 @@ function getID(input) {
   hash = Math.abs(hash);
   return hash;
 }
-function cleanText(inputText) {
+export function cleanText(inputText) {
   let txt = removeHashTags(inputText);
   txt = removeImages(txt);
   txt = removeAuthors(txt);
@@ -101,12 +102,13 @@ function BackgroundNode({ node, loadedClassName }) {
   };
 }
 
-let defaultOptions = {
-  selector: "[data-background-image-url]",
-  loadedClassName: "loaded",
-};
 
-function BackgroundLazyLoader({ selector, loadedClassName } = defaultOptions) {
+
+export function BackgroundLazyLoader() {
+  
+  let selector        = "[data-background-image-url]";
+  let loadedClassName = "loaded";
+
   let nodes = [].slice
     .apply(document.querySelectorAll(selector))
     .map((node) => new BackgroundNode({ node, loadedClassName }));
@@ -138,9 +140,11 @@ function BackgroundLazyLoader({ selector, loadedClassName } = defaultOptions) {
 
   let observer = new IntersectionObserver(callback);
   nodes.forEach((node) => observer.observe(node.node));
+  
+  return true;
 }
 
-async function createGeoJSON(kml) {
+export function createGeoJSON(kml) {
   const folder2tag = {
     Locations: "LocationLayer",
     Areas: "AreaLayer",
@@ -150,7 +154,7 @@ async function createGeoJSON(kml) {
   // utils.setDescription(doc.getElementsByTagName("description")[0]);
   let doc_folders = doc.getElementsByTagName("Folder");
   let _locations = [];
-  for (i = 0; i < doc_folders.length; i++) {
+  for (let i = 0; i < doc_folders.length; i++) {
     let tag =
       folder2tag[doc_folders[i].getElementsByTagName("name")[0].innerHTML];
     let _locs = toGeoJSON.kml(doc_folders[i], tag).features;
@@ -160,31 +164,8 @@ async function createGeoJSON(kml) {
 
   return _locations;
 }
-function setDescription(_description){
-  
-//   const cdataRegex = /<!\[CDATA\[(.*?)\]\]>/;
-//   const tmpBody = cdataRegex.exec(_description.innerHTML);
-  
-//   let tmpEl = document.createElement("pre");
-//   tmpEl.innerHTML = tmpBody[1];
-  
-//   console.log(html);
-
-//   document.getElementById("about").innerHTML = html;
+export function setDescription(_description){
+  return _description;
 }
 
 
-let utils = {
-  getHashTags: getHashTags,
-  getAuthors: getAuthors,
-  trimSpaces: trimSpaces,
-  getImages: getImages,
-  removeHashTags: removeHashTags,
-  removeAuthors: removeAuthors,
-  removeImages: removeImages,
-  getID: getID,
-  cleanText: cleanText,
-  BackgroundLazyLoader: BackgroundLazyLoader,
-  createGeoJSON: createGeoJSON,
-  setDescription: setDescription
-};

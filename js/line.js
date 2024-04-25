@@ -1,4 +1,6 @@
-class Line {
+import * as settings from "../settings.js";
+
+export class Line {
   name;
   id;
   location;
@@ -28,7 +30,7 @@ class Line {
       source: this.name,
       layout: {},
       paint: {
-        "line-color": MAP_AREA_OUTLINE,
+        "line-color": settings.MAP_AREA_OUTLINE,
         "line-width": 3,
       },
     });
@@ -67,6 +69,6 @@ class Line {
       if(el.classList.contains("marker")) actualId = el.id;
     }
    
-    this.stateMachine.navigateTo(STATES.INFO, actualId);
+    this.stateMachine.navigateTo(settings.STATES.INFO, actualId);
   }
 }

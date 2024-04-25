@@ -1,4 +1,6 @@
-class GalleryItem {
+import * as settings from "../settings.js";
+
+export class GalleryItem {
   thumbnail;
   id;
   name;
@@ -51,7 +53,7 @@ class GalleryItem {
     this.gallery.appendChild(this.thumbnail);
   }
   setLocation() {
-    this.stateMachine.navigateTo(STATES.INFO, this.id);
+    this.stateMachine.navigateTo(settings.STATES.INFO, this.id);
   }
   verifyState() {
     if (state.activeLocationId == this.id) {

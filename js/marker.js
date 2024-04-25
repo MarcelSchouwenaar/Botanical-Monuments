@@ -1,4 +1,6 @@
-class Marker{
+import * as settings from "../settings.js";
+
+export class Marker{
   
   marker;
   icon;
@@ -57,7 +59,7 @@ class Marker{
       if(el.classList.contains("marker")) actualId = el.id;
     }
    
-    this.stateMachine.navigateTo(STATES.INFO, actualId);
+    this.stateMachine.navigateTo(settings.STATES.INFO, actualId);
   }
   
   
