@@ -5,6 +5,7 @@ import { Area }         from "./area.js";
 import { Marker }       from "./marker.js";
 import { Line }         from "./line.js";
 import { GalleryItem }  from "./galleryItem.js";
+import { TagSystem }    from "./tagsystem.js";
 
 export class Place {
   id;
@@ -19,7 +20,8 @@ export class Place {
   gallery;
   galleryItem;
   infopanel;
-  filterController;
+  filter;
+  tagSystem;
   stateMachine;
 
   constructor(
@@ -27,17 +29,18 @@ export class Place {
     map,
     gallery,
     infopanel,
-    filterController,
+    filter,
     stateMachine
   ) {
     this.location = location;
     this.map = map;
     this.gallery = document.getElementById(gallery);
     this.infopanel = document.getElementById(infopanel);
-    this.filterController = filterController;
+    this.filter = filter;
+    this.tagSystem = new TagSystem();
     this.stateMachine = stateMachine;
 
-    this.name = this.location.properties.name;
+    this.name = utils.wrapLanguageTags(this.location.properties.name);
     this.description = this.#getDescription();
     this.id = this.#createID();
 
@@ -61,33 +64,15 @@ export class Place {
   }
   #getTags() {
     let allTags = utils.getHashTags(this.location.properties.description);
-    let relevantTags = [];
-
-    let mostSpecificTagIndex = 0;
-
-    allTags.map((tag) => {
-      settings.TAGS.map((tagList) => {
-        let tagIndex = tagList.indexOf(tag);
-        if (tagIndex >= 0) {
-          relevantTags.push(tag);
-          if (tagIndex > mostSpecificTagIndex) {
-            mostSpecificTagIndex = tagIndex;
-            relevantTags.unshift(tag);
-          }
-          if (relevantTags.indexOf(tagList[0]) < 0)
-            relevantTags.push(tagList[0]);
-        }
-      });
-    });
-    if (relevantTags.length == 0) relevantTags.push(settings.DEFAULT_TAG);
+    let relevantTags = this.tagSystem.completeTagList(allTags);
 
     return relevantTags;
   }
   #getImages() {
     if (!this.location.properties.gx_media_links)
-      return [settings.PLACEHOLDER_IMAGE];
+      return [settings.get("PLACEHOLDER_IMAGE")];
     if (this.location.properties.gx_media_links.length < 1)
-      return [settings.PLACEHOLDER_IMAGE];
+      return [settings.get("PLACEHOLDER_IMAGE")];
 
     let _images = this.location.properties.gx_media_links;
     if (_images.indexOf(" ") > 0) {
@@ -97,10 +82,11 @@ export class Place {
     }
   }
   #getDescription() {
-    return utils.cleanText(this.location.properties.description);
+    let desc = utils.wrapLanguageTags(this.location.properties.description)
+    return utils.cleanText(desc);
   }
   #getIcon() {
-    return settings.ICONS[this.tags[0]] || settings.DEFAULT_ICON;
+    return this.tags[0].getIcon();
   }
   #createID() {
     return utils.getID(this.name + this.description);
@@ -113,9 +99,7 @@ export class Place {
     );
   }
   verifyState() {
-    console.log("verifying state...");
     if (this.stateMachine.activeId == this.id) {
-      console.log("that's me!!", this.id);
       this.showLocation();
       this.galleryItem.createPage();
       this.place.activate();
@@ -144,16 +128,14 @@ export class Place {
         this.map,
         this.location,
         this.tags,
-        this.setLocation,
         this.stateMachine
       );
     } else if (this.location.geometry.type == "Point") {
-      this.place = this.marker = new Marker(
+      this.place = new Marker(
         this.id,
         this.map,
         this.location,
         this.icon,
-        this.setLocation,
         this.stateMachine
       );
     } else if (this.location.geometry.type == "LineString") {
@@ -162,7 +144,6 @@ export class Place {
         this.id,
         this.map,
         this.location,
-        this.setLocation,
         this.stateMachine
       );
     }
@@ -188,10 +169,11 @@ export class Place {
     let match = false;
 
     const self = this;
+    const tagTitles = this.tags.map(tag => tag.title);
 
-    this.filterController.currentFilter.map((tag) => {
+    this.filter.currentFilter.map(tag => {
       if (match) return;
-      match = self.tags.indexOf(tag) >= 0;
+      match = (tagTitles.indexOf(tag) >= 0);
     });
 
     return match;
@@ -204,25 +186,10 @@ export class Place {
     return isInBounds;
   }
 
-  setLocation(e) {
-    console.log("CLICK: stateMachine", this.stateMachine, e, this.id);
-
-    let actualId = this.id;
-    let center = this.center;
-
-    if (e.hasOwnProperty("originalEvent")) {
-      //this is to catch an exception from Mapbox
-      console.log("clicked area:", e, e.originalEvent.target);
-      const el = e.originalEvent.target;
-      if (el.classList.contains("marker")) actualId = el.id;
-    }
-
-    this.stateMachine.navigateTo(settings.STATES.INFO, actualId);
-  }
   showLocation() {
     this.map.flyTo({
       center: this.center,
-      zoom: settings.MAPBOX_DETAIL_ZOOM,
+      zoom: settings.get("MAPBOX_DETAIL_ZOOM"),
     });
   }
 }

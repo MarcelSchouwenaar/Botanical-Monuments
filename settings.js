@@ -1,108 +1,84 @@
+import * as utils       from "./js/utils.js";
 
 //META
-export const TITLE = "Botanical Monuments";
-export const DESCRIPTION = `Botanical Monuments — IABR 2024 - Nature of Hope`;
-export const MANIFEST_URL = 'https://' + location.host + location.pathname;
+let settings = {} 
+settings.TITLE = "Botanical Monuments";
+settings.DESCRIPTION = `Botanical Monuments — IABR 2024 - Nature of Hope`;
+settings.DEFAULT_LANG = "nl";
 
-export const CDN_PATH = "https://cdn.glitch.global/4c0493cc-1166-4590-9984-15c2b192cd62/"
+settings.MANIFEST_URL = 'https://' + location.host + location.pathname;
 
-export const MANIFEST_ICONS = {
-  icons512:  CDN_PATH+"Icon512.png?v=1713774498984",
-  icons256:  CDN_PATH+"Icon256.png?v=1713774498984",
-  icons192:  CDN_PATH+"Icon192.png?v=1713774498984",
-  icons180:  CDN_PATH+"Icon180.png?v=1713774498984",
-  icons32:   CDN_PATH+"Icon32.png?v=1713774498984",
-  icons16:   CDN_PATH+"Icon16.png?v=1713774498984"
+settings.ENABLE_LOADER = true;
+
+const CDN_PATH  = "https://cdn.glitch.global/4c0493cc-1166-4590-9984-15c2b192cd62/";
+settings.PROXY     = "https://follymaps.glitch.me/proxy";
+
+settings.MANIFEST_ICONS = {
+  icons512:  CDN_PATH+"Icon512.png",
+  icons256:  CDN_PATH+"Icon256.png",
+  icons192:  CDN_PATH+"Icon192.png",
+  icons180:  CDN_PATH+"Icon180.png",
+  icons32:   CDN_PATH+"Icon32.png",
+  icons16:   CDN_PATH+"Icon16.png"
 }
 
-export const GMAP_ID = "1iaBUt-YoQnTFQPocSNxlpKPP-9_RSVk"; //BOTANICAL MONUMENTS
-// export const GMAP_ID = "1r0SA7m0Eq5PWfQKur9Xd8MoaGCSjCzA"; //STUDENTEN JOOST
-export const GMAP_URL = "https://www.google.com/maps/d/kml?forcekml=1&mid=" + GMAP_ID;
+
+settings.GMAP_ID             = "1iaBUt-YoQnTFQPocSNxlpKPP-9_RSVk"; //BOTANICAL MONUMENTS
+// settings.GMAP_ID          = "12WkMAwP7MWeVhyHjuit2Gcb6c8OtzcHP&hl"; //OOST BLOG
+// settings.GMAP_ID          = "12XxbJMKfB-802JyoDmruXUd1FqM"; //ROTTERDAM TIPS
+//1w8IO01GYDGd0x8ahrMowjy3YPuwJH_MU //amsterdamse school
+//1-tPVdzn13UqXTgrGqiCuvnx2920 //Follies in Nederland
+
+
+settings.GMAP_URL            = "https://www.google.com/maps/d/kml?forcekml=1&mid=" + settings.GMAP_ID;
+settings.GMAP_TITLE          = settings.TITLE;
+settings.GMAP_DESCRIPTION    = settings.DESCRIPTION;
+
+settings.GSHEET_ID           = "1gELkm5Dfh8hrB5bQfnlKYxk5vySNh7AJGrSaUbnM_KM";
+
 
 //MAPBOX
-export const MAPBOX_STYLE    = "mapbox://styles/toonkoehorst/cklxkpcso4yo017s51mnhhn9j",
-  MAPBOX_API_KEY      =   "pk.eyJ1IjoidG9vbmtvZWhvcnN0IiwiYSI6ImNqb2ZyYjhiZDAweWIzcXM2aWlhMmJxcGYifQ.OGRL7kejFrWD-MEazU8lTg",
-  MAPBOX_CENTER       = [4.472671, 51.91934],
-  MAPBOX_DEFAULT_ZOOM = 12,
-  MAPBOX_DETAIL_ZOOM  = 16;
+// settings.MAPBOX_STYLE     = "mapbox://styles/toonkoehorst/cklxkpcso4yo017s51mnhhn9j"; //mapbox://styles/mapbox/light-v11
+settings.MAPBOX_STYLE        = "mapbox://styles/mapbox/light-v11";
+
+settings.MAPBOX_API_KEY      = "pk.eyJ1IjoidG9vbmtvZWhvcnN0IiwiYSI6ImNqb2ZyYjhiZDAweWIzcXM2aWlhMmJxcGYifQ.OGRL7kejFrWD-MEazU8lTg";
+settings.MAPBOX_CENTER       = [4.472671, 51.91934];
+settings.MAPBOX_DEFAULT_ZOOM = 12;
+settings.MAPBOX_DETAIL_ZOOM  = 16;
  
 //DEFAULT SETTINGS 
  
-export const COLOR_BG = "#a6a6a6",
-  COLOR_FRONT         = "#e4e0e0",
-  COLOR_HIGHLIGHT     = "#0000ff";
+settings.COLOR_BG            = "#BCD7F2"; //#C85243
+settings.COLOR_FRONT         = "#000000";
+settings.COLOR_HIGHLIGHT     = "#ECFB69"; //#0000ff
 
-export const FONT_FAMILY     = "IABR, -apple-system, BlinkMacSystemFont, avenir next, avenir, segoe ui, helvetica neue, helvetica, Cantarell, Ubuntu, roboto, noto, arial, sans-serif",
-      FONT_WEBFONT    = `
-                        @font-face {
-                            font-family: IABR;
-                            src: url("${CDN_PATH}IABR-Regular.woff") format("woff");
-                            font-style: normal;
-                            font-weight:400
-                        }`;
+settings.FONT_FAMILY     = "-apple-system, BlinkMacSystemFont, avenir next, avenir, segoe ui, helvetica neue, helvetica, Cantarell, Ubuntu, roboto, noto, arial, sans-serif";
+// settings.FONT_WEBFONT    = `
+//                         @font-face {
+//                             font-family: IABR;
+//                             src: url("${CDN_PATH}IABR-Regular.woff") format("woff");
+//                             font-style: normal;
+//                             font-weight:400
+//                         }`;
+
+settings.FONT_WEBFONT = false;
       
 // STYLE
-export const MAP_AREA_FILL = "#00CC11",
-  MAP_AREA_OUTLINE = COLOR_HIGHLIGHT,
-  MAP_AREA_HOVER_OPACITY = 0.25,
-  MAP_AREA_HOVER_OUTLINE = COLOR_HIGHLIGHT;
+settings.MAP_AREA_FILL = "#00CC11";
+settings.MAP_AREA_OUTLINE = settings.COLOR_HIGHLIGHT;
+settings.MAP_AREA_HOVER_OPACITY = 0.25;
+settings.MAP_AREA_HOVER_OUTLINE = settings.COLOR_HIGHLIGHT;
 
 
-export const PLACEHOLDER_IMAGE =
-  CDN_PATH+"Placeholder.png?v=1712863059781";
+settings.PLACEHOLDER_IMAGE =
+  CDN_PATH+"Placeholder.png";
 
-export const DEFAULT_AUTHOR = "",
-  AUTHORS = [];
+settings.DEFAULT_AUTHOR = "";
+settings.AUTHORS = [];
 
-// TAGS
+// PATTERNS
 
-export const DEFAULT_TAG = "location",
-  DEFAULT_ICON = "📍";
-
-export const TAGS = [
-  ["location"],
-  ["community", "community_a", "community_b", "community_c"],
-  ["history", "history_a", "history_b", "history_c"],
-  ["education", "education_a", "education_b", "education_c"],
-  ["biodiversity", "biodiversity_a", "biodiversity_b", "biodiversity_c"],
-  ["food", "food_a", "food_b", "food_c"],
-  ["regeneration", "regeneration_a", "regeneration_b", "regeneration_c"],
-];
-
-export const ICONS = {
-  location: "📍",
-  
-  community: "👪",
-  community_a: "🏋️‍♀️",
-  community_b: "👸",
-  community_c: "🧜‍♂️",
-  
-  history: "🏰",
-  history_a: "🏯",
-  history_b: "🛖",
-  history_c: "🗿",
-  
-  education: "📝",
-  education_a: "✒️",
-  education_b: "✏️",
-  education_c: "🖍️",
-  
-  biodiversity: "🌲",
-  biodiversity_a: "🎍",
-  biodiversity_b: "🎋",
-  biodiversity_c: "☘️",
- 
-  food: "🍇",
-  food_a: "🫛",
-  food_b: "🥦",
-  food_c: "🥬",
- 
-  regeneration: "🌱",
-  regeneration_a: "🍃",
-  regeneration_b: "🍂",
-  regeneration_c: "🍁",
-};
-
+let p0 = CDN_PATH+"p0.png";
 let p1 = CDN_PATH+"p1.png";
 let p2 = CDN_PATH+"p2.png";
 let p3 = CDN_PATH+"p3.png";
@@ -111,47 +87,185 @@ let p5 = CDN_PATH+"p5.png";
 let p6 = CDN_PATH+"p6.png";
 let p7 = CDN_PATH+"p7.png";
 
-export const PATTERN_WIDTH = 24,
-      PATTERN_HEIGHT = 24;
+settings.PATTERN_WIDTH = 24;
+settings.PATTERN_HEIGHT = 24;
 
-export const PATTERNS = {
-  location: p1,
+
+//TAGS & ICONS
+
+settings.TAG_SYSTEM = [
+  {
+    title: "location", //First tag is the default tag!
+    parent: null, 
+    icon: "📍",
+    pattern: p1,
+    locales: {
+      "en" : "location", 
+      "nl" : "locatie"
+    }
+  },
+  {
+    title: "botanicalmonuments", //titles cannot contain spaces!
+    parent: null, //parent null means it becomes a root category
+    icon: "🌲",
+    pattern: p0,
+    locales: {
+      "en" : "botanical monuments", //but locales can!
+      "nl" : "botanical monuments"
+    }
+  },
+  {
+    title: "parks", 
+    parent: "botanicalmonuments", 
+    icon: "🌳",
+    pattern: p0,
+    locales: {
+      "en" : "existing parks", 
+      "nl" : "bestaande parken"
+    }
+  },
+
+  {
+    title:   "community",
+    parent: "botanicalmonuments",
+    icon: "🤝",
+    pattern: p2,
+    locales: {
+      "en" : "community organizing",
+      "nl" : "community"
+    }
+  },
+  {
+    title:   "history",
+    parent: "botanicalmonuments",
+    icon: "🏰",
+    pattern: p3,
+    locales: {
+      "en" : "historical relevance",
+      "nl" : "historisch"
+    }
+  },
+  {
+    title: "biodiversity",
+    parent: "botanicalmonuments",
+    icon: "🪲",
+    pattern: p3,
+    locales: {
+      "en" : "biodiversity keepers",
+      "nl" : "biodiversiteit"
+    }
+  },
+  {
+    title: "food",
+    parent: "botanicalmonuments",
+    icon: "🍅",
+    pattern: p4,
+    locales: {
+      "en" : "food",
+      "nl" : "voedsel"
+    }
+  },
+
+  {
+    title: "event",
+    parent: null,
+    icon: "📅",
+    pattern: p6,
+    locales: {
+      "en" : "event",
+      "nl" : "evenement"
+    }
+  },
+  {
+    title: "animals",
+    parent: null,
+    icon: "🦉",
+    pattern: p6,
+    locales: {
+      "en" : "animals",
+      "nl" : "dieren"
+    }
+  },
+  {
+    title: "plantstories",
+    parent: null,
+    icon: "☘️",
+    pattern: p6,
+    locales: {
+      "en" : "plant stories",
+      "nl" : "planten verhalen"
+    }
+  },
+  {
+    title: "seasonalstories",
+    parent: null,
+    icon: "🍁",
+    pattern: p6,
+    locales: {
+      "en" : "seasonal stories",
+      "nl" : "seizoen verhalen"
+    }
+  },
+  {
+    title: "education",
+    parent: null,
+    icon: "📑",
+    pattern: p2,
+    locales: {
+      "en" : "education",
+      "nl" : "educatie"
+    }
+  },
+  {
+    title: "regeneration",
+    parent: null,
+    icon: "🍃",
+    pattern: p5,
+    locales: {
+      "en" : "regeneration",
+      "nl" : "regeneratie"
+    }
+  },
+    {
+    title: "darksky",
+    parent: null,
+    icon: "🌌",
+    pattern: p5,
+    locales: {
+      "en" : "dark skies stories",
+      "nl" : "dark skies verhalen"
+    }
+  },
   
-  community:   p1,
-  community_a: p1,
-  community_b: p1,
-  community_c: p1,
   
-  history:   p2,
-  history_a: p2,
-  history_b: p2,
-  history_c: p2,
-  
-  education:   p3,
-  education_a: p3,
-  education_b: p3,
-  education_c: p3,
-  
-  biodiversity:   p4,
-  biodiversity_a: p4,
-  biodiversity_b: p4,
-  biodiversity_c: p4,
- 
-  food:   p5,
-  food_a: p5,
-  food_b: p5,
-  food_c: p5,
- 
-  regeneration:   p6,
-  regeneration_a: p6,
-  regeneration_b: p6,
-  regeneration_c: p6,
-};
+]
+
+
 
 //UI
 
-export const STATES = {
+settings.STATES = {
   LIST: 0,
   INFO: 1,
   MENU: 2,
 };
+
+
+
+export const getAllSettings = () => {
+  return Object.keys(settings);
+}
+
+export const get = key => {
+  return localStorage.getItem(key) || settings[key];
+}
+export const set = (key, value) => {
+  if(typeof settings[key] !== typeof value) return;
+  if(settings[key]) return localStorage.setItem(key,value);
+}
+export const reset = key => {
+  if(key && settings[key]) return localStorage.removeItem(key);
+  if (confirm("Are you sure you want to revert local changes?")) localStorage.clear();  
+}
+
+

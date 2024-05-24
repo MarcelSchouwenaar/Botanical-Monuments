@@ -1,4 +1,5 @@
-import * as settings from "../settings.js";
+import * as settings  from "../settings.js";
+import * as utils     from "./utils.js";
 
 export class GalleryItem {
   thumbnail;
@@ -39,12 +40,18 @@ export class GalleryItem {
     this.createThumbnail();
   }
 
-  createThumbnail() {
+  createThumbnail(){
+  
     this.thumbnail = document.createElement("div");
-    this.thumbnail.classList.add(...this.tags);
+    
+    let tagTitles = this.tags.map(tag => tag.title);
+    this.thumbnail.classList.add(... tagTitles);
+    
+    const thumbnailTitle = utils.stripHTML(this.name);
+    
     this.thumbnail.innerHTML = `
               <div class="listItem" id="listItem_${this.id}">
-                <div title='${this.name}'  class="listItemImg" data-background-image-url="${this.images[0]}"></div>
+                <div title='${thumbnailTitle}'  class="listItemImg" data-background-image-url="${utils.getImage(this.images[0])}"></div>
                 <h3>${this.name}</h3>
               </div>
             `;
@@ -53,7 +60,7 @@ export class GalleryItem {
     this.gallery.appendChild(this.thumbnail);
   }
   setLocation() {
-    this.stateMachine.navigateTo(settings.STATES.INFO, this.id);
+    this.stateMachine.navigateTo(settings.get("STATES").INFO, this.id);
   }
   verifyState() {
     if (state.activeLocationId == this.id) {
@@ -61,23 +68,24 @@ export class GalleryItem {
     }
   }
   createPage() {
+    
+    const photoTitle = utils.stripHTML(this.name);
+
     this.infopanel.innerHTML = `
         <div class="header" id="header">
-          <h1>${this.name} </h1>
+          <h1>${this.name}</h1>
         
         ${
           this.images.length > 1
             ? this.images
                 .map(
                   (img, i) =>
-                    `<img title='${this.name}' alt='${
-                      this.name
-                    }' src='${img}''/><span>${i + 1}/${
+                    `<img title='${photoTitle}' alt='${photoTitle}' src='${utils.getImage(img)}'/><span class='photoIndex'>${i + 1}/${
                       this.images.length
                     }</span>`
                 )
                 .join(" ")
-            : `<img title='${this.name}' alt='${this.name}' src='${this.images[0]}' />`
+            : `<img title='${photoTitle}' alt='${photoTitle}' src='${utils.getImage(this.images[0])}' />`
         }
         </div>
         <p class="description">
@@ -85,7 +93,7 @@ export class GalleryItem {
           ${this.authors.join(", ")}
         </p>
         <p class='tags'>
-          ${this.tags.map((tag) => `<span class=''>${tag}</span>`).join(", ")}
+          ${this.tags.map((tag) => tag.getTagLocaleHTML()).join("")}
         </p>      
         <p>
           <a target="_blank" href="https://www.google.com/maps/search/?api=1&query=${

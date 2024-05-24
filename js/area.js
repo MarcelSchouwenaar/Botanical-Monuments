@@ -6,16 +6,15 @@ export class Area {
   name;
   id;
   location;
-  callback;
   map;
   stateMachine;
+  tags;
 
-  constructor(name, id, map, location, tags, callback, stateMachine) {
+  constructor(name, id, map, location, tags, stateMachine) {
     this.name = name;
     this.id = id;
     this.map = map;
     this.location = location;
-    this.callback = callback;
     this.stateMachine = stateMachine;
     this.tags = tags
     this.addArea();
@@ -56,7 +55,7 @@ export class Area {
       source: this.name,
       layout: {},
       paint: {
-        "line-color": settings.MAP_AREA_HOVER_OUTLINE,
+        "line-color": settings.get("MAP_AREA_HOVER_OUTLINE"),
         "line-width": 3,
         "line-opacity" : 0
       },
@@ -89,9 +88,8 @@ export class Area {
     // console.log("deactivate area");
   }
   onMouseMove(){
-    console.log("mouseMove");
     this.map.setPaintProperty("line_" + this.id,"line-opacity",1);
-    this.map.setPaintProperty("fill_" + this.id,"fill-opacity",settings.MAP_AREA_HOVER_OPACITY);
+    this.map.setPaintProperty("fill_" + this.id,"fill-opacity",settings.get("MAP_AREA_HOVER_OPACITY"));
     
   }
   onMouseLeave(){
@@ -104,12 +102,11 @@ export class Area {
 
     if (e.hasOwnProperty("originalEvent")) {
       //this is to catch an exception from Mapbox
-      console.log('clicked area:',e, e.originalEvent.target);
       const el = e.originalEvent.target;
       if(el.classList.contains("marker")) actualId = el.id;
     }
    
-    this.stateMachine.navigateTo(settings.STATES.INFO, actualId);
+    this.stateMachine.navigateTo(settings.get("STATES").INFO, actualId);
   }
   
 }

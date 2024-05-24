@@ -1,4 +1,7 @@
 import * as settings from "../settings.js";
+import {TagSystem} from "./tagsystem.js";
+
+const tagSystem = new TagSystem();
 
 const loadImage = path => {
   return new Promise((resolve, reject) => {
@@ -15,13 +18,13 @@ const loadImage = path => {
 }
 
 export const PatternMaker = async function(tags){
-  
-  let images = tags.map(tag => settings.PATTERNS[tag]);
-  if(images.length == 0) images = [settings.PATTERNS[0]];
+    
+  let images = tags.map(tag => tag.pattern);
+  if(images.length == 0) images = [tagSystem.defaultTag.pattern];
   
   const canvas = document.createElement("canvas");
-  const cw = canvas.width = settings.PATTERN_WIDTH;
-  const ch = canvas.height = settings.PATTERN_HEIGHT;
+  const cw = canvas.width = settings.get("PATTERN_WIDTH");
+  const ch = canvas.height = settings.get("PATTERN_HEIGHT");
   
   const ctx = canvas.getContext('2d');
   

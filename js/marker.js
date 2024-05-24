@@ -8,9 +8,8 @@ export class Marker{
   map;
   stateMachine;
   
-  constructor(id, map, location, icon, callback, stateMachine){
+  constructor(id, map, location, icon, stateMachine){
     
-    this.callback = callback;
     this.id = id;
     this.map = map;
     this.stateMachine = stateMachine;
@@ -30,7 +29,6 @@ export class Marker{
       .addTo(this.map);
     
     const self = this;
-    // this.marker.addEventListener("click", (e) => self.callback(e));
     this.marker.addEventListener("click",e => this.setLocation(e));
   }
   getCenter(){
@@ -54,12 +52,11 @@ export class Marker{
 
     if (e.hasOwnProperty("originalEvent")) {
       //this is to catch an exception from Mapbox
-      console.log('clicked area:',e, e.originalEvent.target);
       const el = e.originalEvent.target;
       if(el.classList.contains("marker")) actualId = el.id;
     }
    
-    this.stateMachine.navigateTo(settings.STATES.INFO, actualId);
+    this.stateMachine.navigateTo(settings.get("STATES").INFO, actualId);
   }
   
   

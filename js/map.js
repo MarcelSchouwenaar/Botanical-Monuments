@@ -5,12 +5,12 @@ export class Map{
   map;
   
   constructor(){
-      mapboxgl.accessToken = settings.MAPBOX_API_KEY;
+      mapboxgl.accessToken = settings.get("MAPBOX_API_KEY");
       this.map = new mapboxgl.Map({
         container: "map",
-        style:   settings.MAPBOX_STYLE,
-        center:  settings.MAPBOX_CENTER,
-        zoom:    settings.MAPBOX_DEFAULT_ZOOM,
+        style:   settings.get("MAPBOX_STYLE"),
+        center:  settings.get("MAPBOX_CENTER"),
+        zoom:    settings.get("MAPBOX_DEFAULT_ZOOM"),
       });
 
       this.map.setMaxPitch(0);

@@ -11,15 +11,14 @@ export class StateMachine {
   navigationEvent = new Event("navigationUpdate");
 
   constructor(map) {
-    this.prevZoom = settings.MAPBOX_DEFAULT_ZOOM;
-    this.prevCenter = settings.MAPBOX_CENTER;
+    this.prevZoom = settings.get("MAPBOX_DEFAULT_ZOOM");
+    this.prevCenter = settings.get("MAPBOX_CENTER");
     this.self = this;
     this.map = map;
     this.activeId = null;  
-    this.init();
+    // this.init();
   }
   init() {
-    console.log("stateMachine: adding event listeners");
     this.addEventListeners();
     this.go();
     return;
@@ -50,8 +49,9 @@ export class StateMachine {
   }
   go() {
     let url = new URL(document.location);
+    let self = this;
 
-    let state = url.searchParams.get("state") || settings.STATES.LIST;
+    let state = url.searchParams.get("state") || settings.get("STATES").LIST;
     state = parseInt(state);
 
     let id = url.searchParams.get("id") || null;
@@ -64,15 +64,13 @@ export class StateMachine {
     }
 
     switch (state) {
-      case settings.STATES.INFO:
+      case settings.get("STATES").INFO:
         document.body.dataset.state = "info";
         break;
-      case settings.STATES.MENU:
+      case settings.get("STATES").MENU:
         document.body.dataset.state = "menu";
         break;
       default:
-        console.log("default trigger", this.prevZoom, this.prevCenter);
-
         this.map.flyTo({
           center: this.prevCenter,
           zoom: this.prevZoom,
@@ -81,13 +79,13 @@ export class StateMachine {
         document.body.dataset.state = "list";
     }
     document.body.dispatchEvent(this.navigationEvent);
+    
   }
   navigateTo(newState, id) {
     let url = new URL(document.location);
     url.searchParams.set("state", newState);
 
-    if (newState == settings.STATES.INFO && !!id) {
-      console.log("setting prevZoom", this.prevZoom);
+    if (newState == settings.get("STATES").INFO && !!id) {
       this.prevCenter = this.map.getCenter();
       this.prevZoom = this.map.getZoom();
       url.searchParams.set("id", id);

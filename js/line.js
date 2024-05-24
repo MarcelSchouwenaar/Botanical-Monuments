@@ -4,16 +4,14 @@ export class Line {
   name;
   id;
   location;
-  callback;
   map;
   stateMachine;
 
-  constructor(name, id, map, location, tags, callback, stateMachine) {
+  constructor(name, id, map, location, tags, stateMachine) {
     this.name = name;
     this.id = id;
     this.map = map;
     this.location = location;
-    this.callback = callback;
     this.stateMachine = stateMachine;
 
     this.map.addSource(this.name, {
@@ -30,7 +28,7 @@ export class Line {
       source: this.name,
       layout: {},
       paint: {
-        "line-color": settings.MAP_AREA_OUTLINE,
+        "line-color": settings.get("MAP_AREA_OUTLINE"),
         "line-width": 3,
       },
     });
@@ -64,11 +62,10 @@ export class Line {
 
     if (e.hasOwnProperty("originalEvent")) {
       //this is to catch an exception from Mapbox
-      console.log('clicked area:',e, e.originalEvent.target);
       const el = e.originalEvent.target;
       if(el.classList.contains("marker")) actualId = el.id;
     }
    
-    this.stateMachine.navigateTo(settings.STATES.INFO, actualId);
+    this.stateMachine.navigateTo(settings.get("STATES").INFO, actualId);
   }
 }
