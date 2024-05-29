@@ -48,11 +48,11 @@ const init = async function(){
     loader.addStatus("Processed location data");
 
     const locations       = geoJSON.locations; 
-    const title           = geoJSON.title;
-    const description     = geoJSON.description;
+    settings.set("GMAP_TITLE",geoJSON.title);
+    settings.set("GMAP_DESCRIPTION",geoJSON.description);
     
     //add styles and UI elements
-    let decorator         = new Decorator(stateMachine, title, description);
+    let decorator         = new Decorator(stateMachine);
     
     //add locations to the map
     locations.forEach((location) => {
@@ -77,7 +77,10 @@ const init = async function(){
     
     //initiate state machine
     stateMachine.init();
- 
+    
+    //exposing some features for the editor
+    window.settings = settings;
+    window.decorator = decorator;
     
     loader.dismiss();
 

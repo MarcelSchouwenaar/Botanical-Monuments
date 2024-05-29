@@ -3,15 +3,16 @@ import * as utils       from "./js/utils.js";
 //META
 let settings = {} 
 settings.TITLE = "Botanical Monuments";
-settings.DESCRIPTION = `Botanical Monuments — IABR 2024 - Nature of Hope`;
-settings.DEFAULT_LANG = "nl";
+settings.DESCRIPTION   = `Botanical Monuments — IABR 2024 - Nature of Hope`;
+settings.ABOUT         = settings.DESCRIPTION;
+settings.DEFAULT_LANG  = "nl";
 
 settings.MANIFEST_URL = 'https://' + location.host + location.pathname;
 
 settings.ENABLE_LOADER = true;
 
-const CDN_PATH  = "https://cdn.glitch.global/4c0493cc-1166-4590-9984-15c2b192cd62/";
-settings.PROXY     = "https://follymaps.glitch.me/proxy";
+const CDN_PATH      = "https://cdn.glitch.global/4c0493cc-1166-4590-9984-15c2b192cd62/";
+settings.PROXY      = "https://follymaps.glitch.me/proxy";
 
 settings.MANIFEST_ICONS = {
   icons512:  CDN_PATH+"Icon512.png",
@@ -251,7 +252,6 @@ settings.STATES = {
 };
 
 
-
 export const getAllSettings = () => {
   return Object.keys(settings);
 }
@@ -259,10 +259,12 @@ export const getAllSettings = () => {
 export const get = key => {
   return localStorage.getItem(key) || settings[key];
 }
+
 export const set = (key, value) => {
   if(typeof settings[key] !== typeof value) return;
   if(settings[key]) return localStorage.setItem(key,value);
 }
+
 export const reset = key => {
   if(key && settings[key]) return localStorage.removeItem(key);
   if (confirm("Are you sure you want to revert local changes?")) localStorage.clear();  

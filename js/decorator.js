@@ -10,8 +10,9 @@ export class Decorator{
   aboutPage;
   title;
   description;
+  about;
 
-  constructor(stateMachine, title, description){
+  constructor(stateMachine){
     
     this.stateMachine = stateMachine;
     
@@ -20,24 +21,25 @@ export class Decorator{
     this.menuToggle       = document.getElementById("menu-toggle");
     this.aboutPage        = document.getElementById("about");
     
-    this.title            = title;
-    this.description      = description;
+    this.title            = settings.get("TITLE");
+    this.description      = settings.get("DESCRIPTION");
+    this.about            = settings.get("ABOUT");
     
-    this.#setColors();
-    this.#setThemeColors();
-    this.#setFonts();
-    this.#setTitleAndDescription();
-    this.#setManifest();
-    this.#setAboutPage();
+    this.setColors();
+    this.setThemeColors();
+    this.setFonts();
+    this.setTitleAndDescription();
+    this.setManifest();
+    this.setAboutPage();
     
-    this.#addEventListeners();
+    this.addEventListeners();
 
   }
-  #setManifest(){
+  setManifest(){
     initializeManifest();
   }
 
-  #addEventListeners(){
+  addEventListeners(){
     this.toggle.addEventListener("click", (e) => {this.stateMachine.togglePanel()});
     this.close.addEventListener("click", (e) => { this.stateMachine.navigateTo(settings.get("STATES").LIST) });
     this.menuToggle.addEventListener("click", (e) => { 
@@ -45,17 +47,17 @@ export class Decorator{
       this.stateMachine.togglePanel("up");
      });
   }
-  #setColors(){
+  setColors(){
     document.documentElement.style.setProperty("--color", settings.get("COLOR_FRONT"));
     document.documentElement.style.setProperty("--bg-color", settings.get("COLOR_BG"));
     document.documentElement.style.setProperty("--highlight-color", settings.get("COLOR_HIGHLIGHT"));
     document.querySelectorAll("path").forEach((el) => { el.setAttribute("style", "fill:" + settings.get("COLOR_FRONT")) });
   }
-  #setThemeColors(){
+  setThemeColors(){
     document.querySelector('meta[name="msapplication-TileColor"]').setAttribute("content", settings.get("COLOR_BG"));
     document.querySelector('meta[name="theme-color"]').setAttribute("content", settings.get("COLOR_BG"));
   }
-  #setFonts(){
+  setFonts(){
     document.documentElement.style.setProperty("--default-font-family",settings.get("FONT_FAMILY"));
     if(settings.get("FONT_WEBFONT")){
       let styleEl = document.createElement("style");
@@ -65,28 +67,28 @@ export class Decorator{
       head.appendChild(styleEl)
     }
   }
-  #setTitleAndDescription(){
+  setTitleAndDescription(){
     
     document.getElementById("title").innerHTML = settings.get("TITLE");
     document.title = settings.get("TITLE");
     document.description = settings.get("DESCRIPTION");
   }
-  #setLanguage(){
+  setLanguage(){
     document.documentElement.setAttribute('lang', settings.get("DEFAULT_LANG"));
   }
 
-  #setAboutPage(){
+  setAboutPage(){
     
     this.aboutPage.innerHTML = "";
     
     let titleEl = document.createElement("h1");
-    titleEl.innerHTML = this.title || settings.get("TITLE");
+    titleEl.innerHTML = settings.get("TITLE");
     
-    let descriptionEl = document.createElement("div");
-    descriptionEl.innerHTML = this.description || settings.get("DESCRIPTION");
+    let aboutEl = document.createElement("div");
+    aboutEl.innerHTML = settings.get("ABOUT");
     
     this.aboutPage.appendChild(titleEl);
-    this.aboutPage.appendChild(descriptionEl);
+    this.aboutPage.appendChild(aboutEl);
         
   }
 
