@@ -1,4 +1,4 @@
-:root{
+:root {
   --light-cyan: #ddfdfeff;
   --light-coral: #ed9390ff;
   --icterine: #ffff66ff;
@@ -7,11 +7,12 @@
   --color: #ffffff;
   --bg-color: var(--brunswick-green);
   --highlight-color: var(--hot-pink);
-  --font-family: -apple-system, BlinkMacSystemFont, avenir next, avenir, segoe ui, helvetica neue, helvetica, Cantarell, Ubuntu, roboto, noto, arial, sans-serif;
-
+  --font-family: -apple-system, BlinkMacSystemFont, avenir next, avenir,
+    segoe ui, helvetica neue, helvetica, Cantarell, Ubuntu, roboto, noto, arial,
+    sans-serif;
 }
 
-body{
+body {
   background-color: var(--bg-color);
   color: var(--color);
   font-family: var(--font-family);
@@ -19,18 +20,27 @@ body{
   line-height: 1em;
   box-sizing: border-box;
 }
-h1{
+h1 {
   margin: 0;
   padding: 0;
-  font-size: 24px;
-  line-height: 48px;
+  font-size: 2em;
+  line-height: 1em;
   font-weight: 400;
 }
-#editor{
+h2 {
+  font-size: 1em;
+  line-height: 2em;
+  padding: 0;
+  margin: 0;
+  text-transform: uppercase;
+  border-bottom: 1px solid #ccc;
+  color: #333333;
+}
+#editor {
   display: grid;
   gap: 20px;
   grid-template-columns: 240px 240px auto;
-  grid-template-rows:  48px auto 48px;
+  grid-template-rows: 48px auto 48px;
   grid-template-areas:
     "logo     topbar      map"
     "leftbar  rightbar    map"
@@ -39,9 +49,8 @@ h1{
   width: 100vw;
   padding: 20px;
   box-sizing: border-box;
-
 }
-#modal{
+#modal {
   display: none;
   position: fixed;
   left: 300px;
@@ -50,186 +59,227 @@ h1{
   height: calc(100vh - 600px);
   background-color: white;
 }
-.sidePanel{
+.sidePanel {
   background-color: #eeeeee;
   border-radius: 6px;
-  padding: 12px; 
+  padding: 12px;
   color: black;
 }
-#logo{
+#logo {
   grid-area: logo;
 }
-#topbar{
+#topbar {
   grid-area: topbar;
 }
 
-#leftbar
-{
+#leftbar {
   grid-area: leftbar;
   display: flex;
   flex-direction: column;
   gap: 10px;
-
 }
-#map
-{
+#map {
   grid-area: map;
   display: flex;
   justify-content: center;
   align-items: center;
-
 }
-#rightbar
-{
+#rightbar {
   grid-area: rightbar;
   display: flex;
   flex-direction: column;
   gap: 10px;
-  
-
 }
-#account
-{
+#account {
   grid-area: account;
 }
-#bottombar
-{
+#bottombar {
   grid-area: bottombar;
 }
 
-#editor > div{
+#editor > div {
   justify-items: stretch;
   align-self: stretch;
 }
 
-
-#mapFrame{
+#mapFrame {
   width: 100%;
   height: 100%;
   border: none;
   transition: width 1s;
-  box-shadow: 0px 4px 8px rgba(0,0,0,0.3);
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.3);
   border-radius: 12px;
 }
-.mapFrameMobile{
+.mapFrameMobile {
   width: 480px !important;
 }
 
-.property{
+.property {
   display: grid;
   grid-template-columns: 32px auto;
-  grid-template-rows:    16px 24px;
+  grid-template-rows: 16px 24px;
   grid-template-areas:
     "icon    title "
     "icon    value ";
   gap: 4px;
   border-radius: 6px;
 }
-.property:hover{
+.property:hover {
   background: white;
 }
-.propertyIcon{
+.activeProp{
+  background: white;
+}
+.propertyIcon {
   grid-area: icon;
   font-size: 18px;
   height: 100%;
   display: flex;
-   align-items: center;
-    justify-content: center;
+  align-items: center;
+  justify-content: center;
 }
-.propertyTitle{
+.propertyTitle {
   grid-area: title;
   text-transform: uppercase;
   display: block;
   font-weight: bold;
-  padding: 4px 0 ;
+  padding: 4px 0;
 }
-.propertySubTitle{
+.propertySubTitle {
   grid-area: value;
   padding: 4px 0;
   font-weight: normal;
   opacity: 0.5;
 }
-.input-group{
+.input-group {
   width: 100%;
 }
-input, button, textarea{
+input,
+button,
+textarea, 
+select{
   font-family: var(--font-family);
 }
-label{
+label {
   display: flex;
   justify-content: space-between;
   font-weight: bold;
-  line-height: 1.5em;
+  line-height: 2em;
   text-transform: uppercase;
   color: #333333;
 }
-input[type="text"]{
+input[type="text"] {
   display: block;
   width: 100%;
   border: 1px solid #cccccc;
-  border-radius: 3px;
+  border-radius: 6px;
   line-height: 1.5em;
   padding: 4px;
 }
-textarea{
+
+select{
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  display: block;
+  width: 100%;
+  border: 1px solid #cccccc;
+  border-radius: 6px;
+  line-height: 1.5em;
+  padding: 4px;
+}
+textarea {
   width: 100%;
   height: 240px;
   border: 1px solid #cccccc;
-  border-radius: 3px;
+  border-radius: 6px;
   padding: 4px;
 }
 .copyFromMapBtn,
-.revertBtn{
-  font-size: .9em;
-  margin: 4px 0;
+.revertBtn {
+  display: inline-block;
+  font-size: 0.9em;
+  padding: 0px 4px;
+  border-radius: 6px;
 }
-.copyFromMapBtn:before{
-  content: "Get from Google Map";
+.copyFromMapBtn:hover,
+.revertBtn:hover{
+  background-color: white;
 }
-.revertBtn:before{
-  content: "Revert";
+.copyFromMapBtn:before {
+  content: "🗺️";
 }
-.button-group{
+.revertBtn:before {
+  content: "↩️";
+}
+.button-group {
   display: flex;
   flex-direction: row;
   gap: 10px;
-  justify-content: center;
+  justify-content: space-between;
+  
 }
-.button-group button{
+.button-group button {
   flex-grow: 1;
   border: none;
   border-radius: 6px;
   padding: 10px 4px;
   text-align: center;
-  box-shadow: 0px 2px 4px rgba(0,0,0,.25);
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.25);
   font-weight: bold;
-  
 }
-.saveBtn{
+.saveBtn {
   background-color: var(--highlight-color);
   color: white;
 }
-.cancelBtn{
+.cancelBtn {
   background-color: white;
   color: black;
 }
 
-.notification{
+.notification {
   display: block;
   background-color: var(--brunswick-green);
   padding: 6px;
   border-radius: 6px;
   color: white;
 }
-.notification-error{
-  background-color: orange; 
+.notification-error {
+  background-color: orange;
 }
 
+ 
+.mapStyleLabelList{
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 10px;
+}
+.mapStyleLabel{
+  flex-grow: 1;
+  width: calc(50% - 5px);
+  text-transform: none;
+}
+.mapStyleLabel input{
+  display: none;
+}
+.mapStyleIcon{
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  border-radius: 6px;
+  background-size: cover;
+  border: 2px solid white;
+}
+.mapStyleLabel input:checked + .mapStyleIcon{
+ border: 2px solid var(--highlight-color);
+} 
+
 @media only screen and (max-width: 768px) {
-  #editor *{
+  #editor * {
     display: none;
   }
-  #editor:after{
+  #editor:after {
     display: flex;
     content: "The editor is only available on desktop.";
     position: fixed;
@@ -240,5 +290,4 @@ textarea{
     color: white;
     font-size: 24px;
   }
-  
 }

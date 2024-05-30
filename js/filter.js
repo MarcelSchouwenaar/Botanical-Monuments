@@ -21,21 +21,22 @@ export class Filter {
     
   }
 
-  getFilterTag(tag) {
+  getFilterTag(tag, icon) {
     let el = document.createElement("label");
     let localizedTag = this.tagSystem.getTagLocaleHTML(tag);
     let isRoot = this.tagSystem.isRootTag(tag);
     el.className = "tagLbl";
-    el.innerHTML = `<input type="checkbox" name="${tag}" value="${tag}" checked><span class="tag noselect ${ (isRoot) ? "tag-mobile" : "tag-desktop"}">${localizedTag}</span>`;
+    el.innerHTML = `<input type="checkbox" name="${tag}" value="${tag}" checked><span class="tag noselect ${ (isRoot) ? "tag-mobile" : "tag-desktop"}">${icon}  ${localizedTag}</span>`;
     return el;
   }
   addFilterTags() {
     const self = this;
     
     let allTags = this.tagSystem.getAllTagsAsArray();
+    if(settings.get("HIDE_DEFAULT_TAG")) allTags.shift();
     
     allTags.forEach(tag => {
-      let el = self.getFilterTag(tag.title);
+      let el = self.getFilterTag(tag.title, tag.icon);
       el.querySelector("input").addEventListener("change",e => self.changed(e))
       self.parent.appendChild(el);
     })
@@ -66,6 +67,8 @@ export class Filter {
   setFilter(){
     let selectedTags = this.parent.querySelectorAll("input:checked");
     let _currentFilter = [];
+    
+    if(settings.get("HIDE_DEFAULT_TAG")) _currentFilter.push(this.tagSystem.defaultTag.title);
 
     selectedTags.forEach(tagEl => {
       _currentFilter.push(tagEl.value);

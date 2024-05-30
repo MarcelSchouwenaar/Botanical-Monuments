@@ -81,6 +81,7 @@ const init = async function(){
     //exposing some features for the editor
     window.settings = settings;
     window.decorator = decorator;
+    window.map = mapObj;
     
     loader.dismiss();
 

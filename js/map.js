@@ -26,5 +26,11 @@ export class Map{
     
     return this.map;
   }
+  setAccessToken(){
+    mapboxgl.accessToken = settings.get("MAPBOX_API_KEY");
+  }
+  setStyle(){
+    this.map.setStyle(settings.get("MAPBOX_STYLE"));
+  }
   
 }

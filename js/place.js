@@ -171,7 +171,7 @@ export class Place {
     const self = this;
     const tagTitles = this.tags.map(tag => tag.title);
 
-    this.filter.currentFilter.map(tag => {
+    this.filter.currentFilter.forEach(tag => {
       if (match) return;
       match = (tagTitles.indexOf(tag) >= 0);
     });

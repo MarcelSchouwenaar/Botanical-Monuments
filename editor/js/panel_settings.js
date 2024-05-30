@@ -14,7 +14,7 @@ export class PanelSettings {
     title: "TITLE",
     description: "DESCRIPTION",
     about: "ABOUT",
-    loader: "ENABLE_LOADER"
+    loader: "ENABLE_LOADER",
   };
 
   constructor(frame) {
@@ -30,9 +30,8 @@ export class PanelSettings {
     this.addEventListeners();
   }
   addEventListeners() {
-
     const self = this;
-    
+
     const saveBtn = this.parent.querySelector("#save");
     const cancelBtn = this.parent.querySelector("#cancel");
     const getFromGMapBtns = this.parent.querySelectorAll(".copyFromMapBtn");
@@ -58,21 +57,23 @@ export class PanelSettings {
   saveSettings() {
     try {
       const _title = this.parent.querySelector("input[name=title]").value;
-      const _description = this.parent.querySelector("textarea[name=description]").value;
+      const _description = this.parent.querySelector(
+        "textarea[name=description]"
+      ).value;
       const _about = this.parent.querySelector("textarea[name=about]").value;
       const _loader = this.parent.querySelector("input[name=loader]").checked;
-      
-      console.log("loader value",_loader);
+
+      console.log("loader value", _loader);
 
       this.frame.settings.set("TITLE", _title);
       this.frame.settings.set("DESCRIPTION", _description);
       this.frame.settings.set("ABOUT", _about);
-      this.frame.settings.set("ENABLE_LOADER",_loader);
+      this.frame.settings.set("ENABLE_LOADER", _loader);
 
       this.frame.decorator.setTitleAndDescription();
       this.frame.decorator.setAboutPage();
       this.frame.decorator.setManifest();
-      
+
       this.showNotification();
     } catch (err) {
       console.log(err);
@@ -80,8 +81,8 @@ export class PanelSettings {
     }
   }
   cancel() {
-    this.loadValues();
-    this.render();
+    this.parent.innerHTML = "";
+    delete this;
   }
 
   loadValues() {
@@ -101,7 +102,7 @@ export class PanelSettings {
     inputField.value = this.frame.settings.get(GMapKey);
   }
   revertValueToSaved(e) {
-    const parentInputGroup = e.target.parentNode;
+    const parentInputGroup = e.target.closest(".input-group");
     const inputField =
       parentInputGroup.querySelector("input") ||
       parentInputGroup.querySelector("textarea");
@@ -111,47 +112,64 @@ export class PanelSettings {
     this.frame.settings.reset(settingsKey);
     inputField.value = this.frame.settings.get(settingsKey);
   }
-  showNotification(err){
-   
+  showNotification(err) {
     let el = document.createElement("div");
-    let msg = (err) ? "Something went wrong..." : "Succesfully saved";
+    let msg = err ? "Something went wrong..." : "Succesfully saved";
 
     el.className = "notification";
-    if(err) el.classList.add("notification-error");
-    
-    el.innerHTML = msg;
-    
-    this.parent.appendChild(el);
-    
-    setTimeout(_ => {el.remove()}, 2000);
-     
-  }
+    if (err) el.classList.add("notification-error");
 
+    el.innerHTML = msg;
+
+    this.parent.appendChild(el);
+
+    setTimeout((_) => {
+      el.remove();
+    }, 2000);
+  }
 
   template() {
     return `
+      <h2>🚀 settings</h2>
       <div class="input-group">
-        <label for="title">Title</label>
+        <label for="title">
+          Title
+          <span>
+            <div title="get text from Google Map" class='copyFromMapBtn'></div>
+            <div title="revert to published setting" class='revertBtn'></div>
+          </span>
+        </label>
         <input name="title" type="text" value="${this.title}">
-        <button class='copyFromMapBtn'></button>
-        <button class='revertBtn'></button>
+        
       </div>
       
       <div class="input-group">
-        <label for="description">Description</label>
+        <label for="description">
+          Description
+          <span>
+            <div title="get text from Google Map" class='copyFromMapBtn'></div>
+            <div title="revert to published setting" class='revertBtn'></div>
+          </span>
+        </label>
         <textarea name="description">${this.description}</textarea>
-        <button class='copyFromMapBtn'></button>
-        <button class='revertBtn'></button>
+        
       </div>
       <div class="input-group">
 
-        <label for="about">About</label>
+        <label for="about">
+          About
+          <span>
+            <div title="get text from Google Map" class='copyFromMapBtn'></div>
+            <div title="revert to published setting" class='revertBtn'></div>
+          </span>
+        </label>
         <textarea name="about">${this.about}</textarea>
-         <button class='copyFromMapBtn'></button>
-         <button class='revertBtn'></button>
+         
       </div>
        <div class="input-group">
-        <label for="loader">display load screen<input name="loader" type="checkbox" ${this.loader ? "checked" : ""}></label>
+        <label for="loader">display load screen<input name="loader" type="checkbox" ${
+          this.loader ? "checked" : ""
+        }></label>
       </div>
       <div class="input-group button-group">
         <button id="cancel" class="cancelBtn">Cancel</button>

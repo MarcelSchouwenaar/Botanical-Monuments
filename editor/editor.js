@@ -17,13 +17,22 @@ document.addEventListener("DOMContentLoaded", (event) => {
   const propStylingBtn = document.getElementById("propStyling");
   const propTagsBtn = document.getElementById("propTags");
   
+  const toggleActiveProp = e => {
+    const allProps = document.querySelectorAll(".property");
+          allProps.forEach(prop => prop.classList.remove("activeProp"));
+    const activeProp = e.target.closest(".property");
+          activeProp.classList.add("activeProp");
+  }
+  
   const addEventListeners = e => {
+    
+    
        
-    propSettingsBtn.addEventListener("click",  e => { new PanelSettings(mapFrame) });
-    propDataBtn.addEventListener("click",      e => { new PanelData(mapFrame) });
-    propMapStyleBtn.addEventListener("click",  e => { new PanelMapStyle(mapFrame) });
-    propStylingBtn.addEventListener("click",   e => { new PanelStyling(mapFrame) });
-    propTagsBtn.addEventListener("click",      e => { new PanelTags(mapFrame) });
+    propSettingsBtn.addEventListener("click",  e => { toggleActiveProp(e); new PanelSettings(mapFrame); });
+    propDataBtn.addEventListener("click",      e => { toggleActiveProp(e); new PanelData(mapFrame) });
+    propMapStyleBtn.addEventListener("click",  e => { toggleActiveProp(e); new PanelMapStyle(mapFrame) });
+    propStylingBtn.addEventListener("click",   e => { toggleActiveProp(e); new PanelStyling(mapFrame) });
+    propTagsBtn.addEventListener("click",      e => { toggleActiveProp(e); new PanelTags(mapFrame) });
 
   }
     
