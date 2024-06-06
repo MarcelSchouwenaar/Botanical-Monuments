@@ -10,7 +10,7 @@ export class Loader {
     this.enabled = settings.get("ENABLE_LOADER");
     console.log(">> Loader enabled?", this.enabled);
 
-    if(this.enabled == false) return;
+    if(this.enabled != true) return;
   
     const body = document.body;
 
@@ -20,11 +20,11 @@ export class Loader {
     body.appendChild(this.el);
   }
   addStatus(newStatus) {
-    if(this.enabled == false) return console.log("loader",newStatus);
+    if(this.enabled != true ) return console.log("loader",newStatus);
     this.el.innerHTML += "<br>" + newStatus + " ✅";
   }
   dismiss() {
-    if(this.enabled == false) return;
+    if(this.enabled != true) return;
     this.el.innerHTML += "<br><br> All done 🚀";
 
     let self = this;

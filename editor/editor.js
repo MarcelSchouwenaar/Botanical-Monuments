@@ -17,6 +17,9 @@ document.addEventListener("DOMContentLoaded", (event) => {
   const propStylingBtn = document.getElementById("propStyling");
   const propTagsBtn = document.getElementById("propTags");
   
+  const toggleMobileBtn = document.getElementById("toggleMobile");
+  const refreshFrameBtn = document.getElementById("refreshFrame");
+  
   const toggleActiveProp = e => {
     const allProps = document.querySelectorAll(".property");
           allProps.forEach(prop => prop.classList.remove("activeProp"));
@@ -24,9 +27,19 @@ document.addEventListener("DOMContentLoaded", (event) => {
           activeProp.classList.add("activeProp");
   }
   
+  const toggleMobile = e => {
+    const isMobile = mapFrame.classList.toggle("mapFrameMobile");
+    e.target.innerHTML = isMobile ? "desktop" : "mobile";
+  }
+  const refreshFrame = e =>{
+    const loc = mapFrame.getAttribute("src");
+    mapFrame.src = loc;
+  }
+  
   const addEventListeners = e => {
-    
-    
+  
+    toggleMobileBtn.addEventListener("click", toggleMobile);
+    refreshFrameBtn.addEventListener("click", refreshFrame);
        
     propSettingsBtn.addEventListener("click",  e => { toggleActiveProp(e); new PanelSettings(mapFrame); });
     propDataBtn.addEventListener("click",      e => { toggleActiveProp(e); new PanelData(mapFrame) });

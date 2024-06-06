@@ -100,7 +100,19 @@ a:hover{
     top: 15px;
     z-index: 99;
   }
-  
+  #logo{
+    position: fixed;
+    bottom: 10px;
+    left: 10px;
+    height: 180px;
+    width: 320px;
+    font-size: 3em;
+    z-index: 98;
+    pointer-events: none;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+  }
 
   .marker {
     background-size: cover;
@@ -154,7 +166,6 @@ a:hover{
   position: fixed;
   display: flex;
   flex-direction: row;
-/*   justify-content: space-between; */
   align-content: stretch;
   height: 44px;
   width: 100%;
@@ -162,17 +173,6 @@ a:hover{
   z-index: 3;
   overflow: hidden;
   width: 480px;
-}
-#topbar::before{
-  position: absolute;
-  content: " ";
-  left: 0;
-  top: 0;
-  width: 100%;
-  height: 100%;
-  background-color: var(--bg-color);
-  z-index: -1;
-  opacity: .8;
 }
 
   #topbar > div{
@@ -188,11 +188,48 @@ a:hover{
   align-items: center;
   justify-content: flex-end;
   height: 100%; 
+  gap: 4px;
+  
 }
-#menu-toggle{
-  padding: 4px 8px;
-  text-align: center;
-}
+  #language-selector select{
+      
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    
+    height: 32px;
+
+    background-color: white;
+    border: none;
+    
+    padding: 5px 15px 5px 15px;
+    border-radius: 20px;
+
+    color: var(--color);
+    border-radius: 100px;
+    text-align: center;
+  }
+
+  #menu-toggle{
+   
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    
+
+    text-align: center;
+    background-color: white;
+    border: none;
+    
+    height: 32px;
+
+    color: var(--color);
+    
+    padding: 5px 15px 5px 15px;
+    border-radius: 20px;
+  }
+
 .arrow{
   display: flex;
   flex-direction: vertical;
@@ -208,6 +245,7 @@ a:hover{
 .arrow:hover{
   transform: scale(1.1);
 }
+
 #title{
   text-transform: capitalize;
   transition: all .5s;
@@ -305,17 +343,6 @@ a:hover{
     text-align: center;
   }
 
-#language-selector select{
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  appearance: none;
-  border: 1px solid var(--color);
-  background-color: var(--bg-color);
-  color: var(--color);
-  border-radius: 4px;
-  text-align: center;
-  padding: 4px 8px;
-}
 
 .listItem{
   float: left;
@@ -361,10 +388,9 @@ a:hover{
   opacity: .5;
 }
 .tags > span[lang]{
-  border: 1px solid var(--color);
   border-radius: 100px;
-  padding: 5px 15px 5px 15px;
-  margin: 0 .3em .3em 0;
+  padding: 5px 12px 5px 12px;
+  margin: 0 .2em .2em 0;
 }
 
 .button{
@@ -399,19 +425,17 @@ a:hover{
   color: var(--color);
   opacity: .4;
   transition: all .25s;
-  border: 1px solid var(--color);
 }
 .tag-desktop{
   border: none;
 }
 .tag-desktop:before{
-  content: "↳ ";
   display: inline-block;
   margin-right: 12px;
 }
 .tagReset{
   background-color: var(--bg-color);
-  outline: 1px solid var(--color);
+/*   outline: 1px solid var(--color); */
   outline-offset: -1px;
   color: var(--color);
   opacity: 0.8;
@@ -496,11 +520,11 @@ body[data-panel="up"] .toggle-up{
 }
 
 body[data-panel="up"] .toggle-down{
-  display: inline-block; 
+  display: flex; 
 }
 
 body[data-panel="down"] .toggle-up{
-  display: inline-block; 
+  display: flex; 
 }
 
 body[data-panel="down"] .toggle-down{
@@ -569,6 +593,11 @@ body[data-panel="down"] .toggle-down{
   .tag-desktop{
     display: none;
   }
+  #logo{
+    bottom: 300px;
+    width: 220px;
+    height: 60px;
+  }
   
   .listItem{
     width: 33%;
@@ -582,6 +611,7 @@ body[data-panel="down"] .toggle-down{
     height: calc(100vh - var(--panel-height));
     width: 100vw;
   }
+
   
   #panel{
     border-top: 1px solid var(--color);

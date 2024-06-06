@@ -92,10 +92,9 @@ export class PanelSettings {
     this.loader = this.frame.settings.get("ENABLE_LOADER");
   }
   loadValueFromGMap(e) {
-    const parentInputGroup = e.target.parentNode;
-    const inputField =
-      parentInputGroup.querySelector("input") ||
-      parentInputGroup.querySelector("textarea");
+    const parentInputGroup = e.target.closest(".input-group");
+    const inputField = parentInputGroup.querySelector("input") || parentInputGroup.querySelector("textarea");
+    console.log("parent",parentInputGroup,"inputfield: ", inputField);    
     const field = inputField.name;
     const GMapKey = this.GMapSettingsMap[field];
 

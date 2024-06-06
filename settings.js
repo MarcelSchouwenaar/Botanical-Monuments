@@ -9,7 +9,7 @@ settings.DEFAULT_LANG = "nl";
 
 settings.MANIFEST_URL = "https://" + location.host + location.pathname;
 
-settings.ENABLE_LOADER = true;
+settings.ENABLE_LOADER = false;
 
 const CDN_PATH =
   "https://cdn.glitch.global/4c0493cc-1166-4590-9984-15c2b192cd62/";
@@ -52,9 +52,9 @@ settings.MAPBOX_DETAIL_ZOOM = 16;
 
 //DEFAULT SETTINGS
 
-settings.COLOR_BG = "#BCD7F2"; //#C85243
+settings.COLOR_BG = "#B496FF"; //#C85243
 settings.COLOR_FRONT = "#000000";
-settings.COLOR_HIGHLIGHT = "#ECFB69"; //#0000ff
+settings.COLOR_HIGHLIGHT = "#efff66"; //#0000ff
 
 settings.FONT_FAMILY =
   "-apple-system, BlinkMacSystemFont, avenir next, avenir, segoe ui, helvetica neue, helvetica, Cantarell, Ubuntu, roboto, noto, arial, sans-serif";
@@ -102,7 +102,7 @@ settings.TAG_SYSTEM = [
     title: "botanicalmonuments", //titles cannot contain spaces!
     parent: null, //parent null means it becomes a root category
     icon: "🌲",
-    pattern: p5,
+    pattern: p0,
     locales: {
       en: "botanical monuments", //but locales can!
       nl: "botanical monuments",
