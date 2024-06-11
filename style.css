@@ -509,6 +509,7 @@ body[data-state="menu"] #close{
 body[data-state="menu"] #title,
 body[data-state="info"] #title{
   margin-left: -240px;
+  opacity: 0;
 /*   flex-grow: 0; */
 /*   width: 0; */
 }
