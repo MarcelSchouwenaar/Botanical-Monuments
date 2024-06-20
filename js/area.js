@@ -27,7 +27,7 @@ export class Area {
     img.src = pattern;
     // gallery.appendChild(img);
 
-    this.map.addSource(this.name, {
+    this.map.addSource(this.name + "-"+ this.id, {
       type: "geojson",
       data: {
         type: "Feature",
@@ -38,10 +38,11 @@ export class Area {
       if (err) throw err;
       this.map.addImage("pattern_" + this.id, image);
     });
+    
     this.map.addLayer({
       id: "fill_" + this.id,
       type: "fill",
-      source: this.name,
+      source: this.name + "-"+ this.id,
       layout: {},
       paint: {
         "fill-pattern": "pattern_" + this.id,
@@ -52,7 +53,7 @@ export class Area {
      this.map.addLayer({
       id: "line_" + this.id,
       type: "line",
-      source: this.name,
+      source:  this.name + "-"+ this.id,
       layout: {},
       paint: {
         "line-color": settings.get("MAP_AREA_HOVER_OUTLINE"),
@@ -99,6 +100,7 @@ export class Area {
   setLocation(e){
     let actualId = this.id;
     // let center = this.center;
+    console.log("clicked area", e);
 
     if (e.hasOwnProperty("originalEvent")) {
       //this is to catch an exception from Mapbox

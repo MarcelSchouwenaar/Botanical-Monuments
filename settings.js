@@ -38,14 +38,14 @@ settings.GMAP_DESCRIPTION = settings.DESCRIPTION;
 settings.GSHEET_ID = "1gELkm5Dfh8hrB5bQfnlKYxk5vySNh7AJGrSaUbnM_KM";
 
 //MAPBOX
-settings.MAPBOX_STYLE =
-  "mapbox://styles/toonkoehorst/cklxkpcso4yo017s51mnhhn9j";
-// settings.MAPBOX_STYLE         = "mapbox://styles/marcelsch/clwsa7n9t015w01pn4r967dmf";
-//
+// settings.MAPBOX_STYLE =  "mapbox://styles/toonkoehorst/cklxkpcso4yo017s51mnhhn9j";
+settings.MAPBOX_STYLE  = "mapbox://styles/toonkoehorst/clw4ziad902mg01qz24uk8dgu";
 
-settings.MAPBOX_API_KEY =
-  "pk.eyJ1IjoidG9vbmtvZWhvcnN0IiwiYSI6ImNqb2ZyYjhiZDAweWIzcXM2aWlhMmJxcGYifQ.OGRL7kejFrWD-MEazU8lTg";
-// settings.MAPBOX_API_KEY      = "pk.eyJ1IjoidG9vbmtvZWhvcnN0IiwiYSI6ImNqb2ZyYjhiZDAweWIzcXM2aWlhMmJxcGYifQ.OGRL7kejFrWD-MEazU8lTg";
+
+settings.MAPBOX_API_KEY = "pk.eyJ1IjoidG9vbmtvZWhvcnN0IiwiYSI6ImNqb2ZyYjhiZDAweWIzcXM2aWlhMmJxcGYifQ.OGRL7kejFrWD-MEazU8lTg";
+
+//https://api.mapbox.com/styles/v1/toonkoehorst/clw4ziad902mg01qz24uk8dgu?access_token=pk.eyJ1IjoidG9vbmtvZWhvcnN0IiwiYSI6ImNqb2ZyYjhiZDAweWIzcXM2aWlhMmJxcGYifQ.OGRL7kejFrWD-MEazU8lTg
+
 settings.MAPBOX_CENTER = [4.472671, 51.91934];
 settings.MAPBOX_DEFAULT_ZOOM = 12;
 settings.MAPBOX_DETAIL_ZOOM = 16;
@@ -57,7 +57,7 @@ settings.COLOR_FRONT = "#000000";
 settings.COLOR_HIGHLIGHT = "#efff66"; //#0000ff
 
 settings.FONT_FAMILY =
-  "-apple-system, BlinkMacSystemFont, avenir next, avenir, segoe ui, helvetica neue, helvetica, Cantarell, Ubuntu, roboto, noto, arial, sans-serif";
+  "arial, helvetica neue, helvetica, Cantarell, Ubuntu, roboto, noto, arial, sans-serif";
 // settings.FONT_WEBFONT    = `
 //                         @font-face {
 //                             font-family: IABR;
@@ -81,17 +81,20 @@ settings.AUTHORS = [];
 
 // PATTERNS
 
-let p0 = CDN_PATH + "p0.png";
-let p1 = CDN_PATH + "p1.png";
-let p2 = CDN_PATH + "p2.png";
-let p3 = CDN_PATH + "p3.png";
-let p4 = CDN_PATH + "p4.png";
-let p5 = CDN_PATH + "p5.png";
-let p6 = CDN_PATH + "p6.png";
-let p7 = CDN_PATH + "p7.png";
+let p0 = CDN_PATH + "p0.png?v=1718888319569";
+let p1 = CDN_PATH + "p0.png?v=1718888319569";
+let p2 = CDN_PATH + "p0.png?v=1718888319569";
+let p3 = CDN_PATH + "p0.png?v=1718888319569";
+let p4 = CDN_PATH + "p0.png?v=1718888319569";
+let p5 = CDN_PATH + "p0.png?v=1718888319569";
+let p6 = CDN_PATH + "p0.png?v=1718888319569";
+let p7 = CDN_PATH + "p0.png?v=1718888319569";
+let p8 = CDN_PATH + "p0.png?v=1718888319569";
+let p9 = CDN_PATH + "p0.png?v=1718888319569";
 
-settings.PATTERN_WIDTH = 24;
-settings.PATTERN_HEIGHT = 24;
+
+settings.PATTERN_WIDTH = 80;
+settings.PATTERN_HEIGHT = 80;
 
 //TAGS & ICONS
 
@@ -113,7 +116,7 @@ settings.TAG_SYSTEM = [
     title: "soil",
     parent: null,
     icon: "🪱",
-    pattern: p6,
+    pattern: p1,
     locales: {
       en: "soil",
       nl: "bodem",
@@ -123,7 +126,7 @@ settings.TAG_SYSTEM = [
     title: "water",
     parent: null,
     icon: "💧",
-    pattern: p6,
+    pattern: p2,
     locales: {
       en: "water",
       nl: "water",
@@ -134,7 +137,7 @@ settings.TAG_SYSTEM = [
     title: "plants",
     parent: null,
     icon: "☘️",
-    pattern: p6,
+    pattern: p3,
     locales: {
       en: "plants",
       nl: "planten",
@@ -145,7 +148,7 @@ settings.TAG_SYSTEM = [
     title: "animals",
     parent: null,
     icon: "🦉",
-    pattern: p6,
+    pattern: p4,
     locales: {
       en: "animals",
       nl: "dieren",
@@ -176,7 +179,7 @@ settings.TAG_SYSTEM = [
     title: "food",
     parent: null,
     icon: "🍅",
-    pattern: p4,
+    pattern: p7,
     locales: {
       en: "food",
       nl: "voedsel",
@@ -198,7 +201,7 @@ settings.TAG_SYSTEM = [
     title: "community",
     parent: null,
     icon: "🤝",
-    pattern: p2,
+    pattern: p9,
     locales: {
       en: "community",
       nl: "community",
@@ -213,39 +216,7 @@ settings.TAG_SYSTEM = [
       en: "event",
       nl: "evenement",
     },
-  },
-
-  //   {
-  //     title: "parks",
-  //     parent: "botanicalmonuments",
-  //     icon: "🌳",
-  //     pattern: p0,
-  //     locales: {
-  //       "en" : "existing parks",
-  //       "nl" : "bestaande parken"
-  //     }
-  //   },
-
-  //   {
-  //     title:   "history",
-  //     parent: "botanicalmonuments",
-  //     icon: "🏰",
-  //     pattern: p3,
-  //     locales: {
-  //       "en" : "historical relevance",
-  //       "nl" : "historisch"
-  //     }
-  //   },
-  //   {
-  //     title: "biodiversity",
-  //     parent: "botanicalmonuments",
-  //     icon: "🪲",
-  //     pattern: p3,
-  //     locales: {
-  //       "en" : "biodiversity keepers",
-  //       "nl" : "biodiversiteit"
-  //     }
-  //   },
+  }
 ];
 
 //UI

@@ -12,31 +12,31 @@ export class PanelMapStyle{
       pk: "pk.eyJ1IjoidG9vbmtvZWhvcnN0IiwiYSI6ImNqb2ZyYjhiZDAweWIzcXM2aWlhMmJxcGYifQ.OGRL7kejFrWD-MEazU8lTg",
       thumbnail: "https://cdn.glitch.global/4c0493cc-1166-4590-9984-15c2b192cd62/follywood.png?v=1717014987588"
     },
-//     {
-//       title: "Unicorn by Taya Lavrinenko",
-//       mapUrl: "mapbox://styles/marcelsch/clwrz5lr000lv01pog30x8ka9",
-//       pk: "pk.eyJ1IjoidG9vbmtvZWhvcnN0IiwiYSI6ImNqb2ZyYjhiZDAweWIzcXM2aWlhMmJxcGYifQ.OGRL7kejFrWD-MEazU8lTg",
-//       thumbnail: "https://cdn.glitch.global/4c0493cc-1166-4590-9984-15c2b192cd62/unicorn.png?v=1717015058276"
-//     },
-//     {
-//       title: "Bubble by Mapbox",
-//       mapUrl: "mapbox://styles/marcelsch/clwsa48bz011m01qxf8nu0kba",
-//       pk: "pk.eyJ1IjoidG9vbmtvZWhvcnN0IiwiYSI6ImNqb2ZyYjhiZDAweWIzcXM2aWlhMmJxcGYifQ.OGRL7kejFrWD-MEazU8lTg",
-//       thumbnail: "https://cdn.glitch.global/4c0493cc-1166-4590-9984-15c2b192cd62/bubble.png?v=1717014804931"
-//     },
-//     {
+    {
+      title: "Unicorn by Taya Lavrinenko",
+      mapUrl: "mapbox://styles/marcelsch/clwrz5lr000lv01pog30x8ka9",
+      pk: "pk.eyJ1IjoidG9vbmtvZWhvcnN0IiwiYSI6ImNqb2ZyYjhiZDAweWIzcXM2aWlhMmJxcGYifQ.OGRL7kejFrWD-MEazU8lTg",
+      thumbnail: "https://cdn.glitch.global/4c0493cc-1166-4590-9984-15c2b192cd62/unicorn.png?v=1717015058276"
+    },
+    {
+      title: "Bubble by Mapbox",
+      mapUrl: "mapbox://styles/marcelsch/clwsa48bz011m01qxf8nu0kba",
+      pk: "pk.eyJ1IjoidG9vbmtvZWhvcnN0IiwiYSI6ImNqb2ZyYjhiZDAweWIzcXM2aWlhMmJxcGYifQ.OGRL7kejFrWD-MEazU8lTg",
+      thumbnail: "https://cdn.glitch.global/4c0493cc-1166-4590-9984-15c2b192cd62/bubble.png?v=1717014804931"
+    },
+    {
   
-//       title: "Blueprint by Amy Lee Walton",
-//       mapUrl: "mapbox://styles/marcelsch/clwsa7n9t015w01pn4r967dmf",
-//       pk: "pk.eyJ1IjoidG9vbmtvZWhvcnN0IiwiYSI6ImNqb2ZyYjhiZDAweWIzcXM2aWlhMmJxcGYifQ.OGRL7kejFrWD-MEazU8lTg",
-//       thumbnail: "https://cdn.glitch.global/4c0493cc-1166-4590-9984-15c2b192cd62/blueprint.png?v=1717014807268"
-//     },
-//     {
-//       title: "Pencil by Madison Draper",
-//       mapUrl: "mapbox://styles/marcelsch/clwsa8gex015x01pn8fvr7ago",
-//       pk: "pk.eyJ1IjoidG9vbmtvZWhvcnN0IiwiYSI6ImNqb2ZyYjhiZDAweWIzcXM2aWlhMmJxcGYifQ.OGRL7kejFrWD-MEazU8lTg",
-//       thumbnail: "https://cdn.glitch.global/4c0493cc-1166-4590-9984-15c2b192cd62/pencil.png"
-//     },
+      title: "Blueprint by Amy Lee Walton",
+      mapUrl: "mapbox://styles/marcelsch/clwsa7n9t015w01pn4r967dmf",
+      pk: "pk.eyJ1IjoidG9vbmtvZWhvcnN0IiwiYSI6ImNqb2ZyYjhiZDAweWIzcXM2aWlhMmJxcGYifQ.OGRL7kejFrWD-MEazU8lTg",
+      thumbnail: "https://cdn.glitch.global/4c0493cc-1166-4590-9984-15c2b192cd62/blueprint.png?v=1717014807268"
+    },
+    {
+      title: "Pencil by Madison Draper",
+      mapUrl: "mapbox://styles/marcelsch/clwsa8gex015x01pn8fvr7ago",
+      pk: "pk.eyJ1IjoidG9vbmtvZWhvcnN0IiwiYSI6ImNqb2ZyYjhiZDAweWIzcXM2aWlhMmJxcGYifQ.OGRL7kejFrWD-MEazU8lTg",
+      thumbnail: "https://cdn.glitch.global/4c0493cc-1166-4590-9984-15c2b192cd62/pencil.png"
+    },
     
     {
       title: "Mapbox Streets",

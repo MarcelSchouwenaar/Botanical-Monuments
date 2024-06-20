@@ -18,12 +18,16 @@ export class Map{
   }
   
   async init(){
+    // await new Promise((resolve, reject) => {
+    //   this.map.on("load", () => {
+    //     resolve();
+    //   });
+    // });
     await new Promise((resolve, reject) => {
-      this.map.on("load", () => {
+      this.map.on("styledata", () => {
         resolve();
       });
     });
-    
     return this.map;
   }
   setAccessToken(){
