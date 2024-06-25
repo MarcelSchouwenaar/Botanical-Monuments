@@ -71,7 +71,7 @@ export class Decorator{
     
     document.getElementById("title").innerHTML = settings.get("TITLE");
     document.title = settings.get("TITLE");
-    document.description = settings.get("DESCRIPTION");
+    document.description = settings.get("GMAP_DESCRIPTION") || settings.get("DESCRIPTION");
   }
   setLanguage(){
     document.documentElement.setAttribute('lang', settings.get("DEFAULT_LANG"));

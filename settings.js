@@ -42,9 +42,11 @@ settings.GSHEET_ID = "1gELkm5Dfh8hrB5bQfnlKYxk5vySNh7AJGrSaUbnM_KM";
 settings.MAPBOX_STYLE  = "mapbox://styles/toonkoehorst/clw4ziad902mg01qz24uk8dgu";
 
 
+
 settings.MAPBOX_API_KEY = "pk.eyJ1IjoidG9vbmtvZWhvcnN0IiwiYSI6ImNqb2ZyYjhiZDAweWIzcXM2aWlhMmJxcGYifQ.OGRL7kejFrWD-MEazU8lTg";
 
 //https://api.mapbox.com/styles/v1/toonkoehorst/clw4ziad902mg01qz24uk8dgu?access_token=pk.eyJ1IjoidG9vbmtvZWhvcnN0IiwiYSI6ImNqb2ZyYjhiZDAweWIzcXM2aWlhMmJxcGYifQ.OGRL7kejFrWD-MEazU8lTg
+//https://api.mapbox.com/styles/v1/toonkoehorst/cklxkpcso4yo017s51mnhhn9j?access_token=pk.eyJ1IjoidG9vbmtvZWhvcnN0IiwiYSI6ImNqb2ZyYjhiZDAweWIzcXM2aWlhMmJxcGYifQ.OGRL7kejFrWD-MEazU8lTg
 
 settings.MAPBOX_CENTER = [4.472671, 51.91934];
 settings.MAPBOX_DEFAULT_ZOOM = 12;
@@ -54,7 +56,7 @@ settings.MAPBOX_DETAIL_ZOOM = 16;
 
 settings.COLOR_BG = "#B496FF"; //#C85243
 settings.COLOR_FRONT = "#000000";
-settings.COLOR_HIGHLIGHT = "#efff66"; //#0000ff
+settings.COLOR_HIGHLIGHT = "#ffff66"; //#0000ff
 
 settings.FONT_FAMILY =
   "arial, helvetica neue, helvetica, Cantarell, Ubuntu, roboto, noto, arial, sans-serif";
@@ -69,7 +71,8 @@ settings.FONT_FAMILY =
 settings.FONT_WEBFONT = false;
 
 // STYLE
-settings.MAP_AREA_FILL = "#00CC11";
+settings.MAP_AREA_FILL = "#00ff00";
+// 00CC11
 settings.MAP_AREA_OUTLINE = settings.COLOR_HIGHLIGHT;
 settings.MAP_AREA_HOVER_OPACITY = 0.25;
 settings.MAP_AREA_HOVER_OUTLINE = settings.COLOR_HIGHLIGHT;

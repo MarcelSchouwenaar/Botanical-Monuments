@@ -12,6 +12,7 @@ import { Decorator }     from "./js/decorator.js";
 import { MultiLang }     from "./js/multilang.js";
 
 
+
 /*************************************
 Follywood Magic!
 **************************************/
@@ -20,6 +21,7 @@ const init = async function(){
   try{
     
     const loader          = new Loader();
+
     
     //load map
     const mapObj          = new Map();
@@ -42,9 +44,7 @@ const init = async function(){
     //process data
     const mapDataText     = await mapData.text();
     const geoJSON         = utils.createGeoJSON(mapDataText);
-    
-    console.log(geoJSON);
-    
+        
     loader.addStatus("Processed location data");
 
     const locations       = geoJSON.locations; 

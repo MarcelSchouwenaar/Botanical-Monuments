@@ -99,14 +99,15 @@ export class Area {
   }
   setLocation(e){
     let actualId = this.id;
-    // let center = this.center;
-    console.log("clicked area", e);
 
     if (e.hasOwnProperty("originalEvent")) {
       //this is to catch an exception from Mapbox
       const el = e.originalEvent.target;
       if(el.classList.contains("marker")) actualId = el.id;
     }
+    
+    console.log("clicked area", e, actualId);
+
    
     this.stateMachine.navigateTo(settings.get("STATES").INFO, actualId);
   }
