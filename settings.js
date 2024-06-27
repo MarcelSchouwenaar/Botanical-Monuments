@@ -60,13 +60,7 @@ settings.COLOR_HIGHLIGHT = "#ffff66"; //#0000ff
 
 settings.FONT_FAMILY =
   "arial, helvetica neue, helvetica, Cantarell, Ubuntu, roboto, noto, arial, sans-serif";
-// settings.FONT_WEBFONT    = `
-//                         @font-face {
-//                             font-family: IABR;
-//                             src: url("${CDN_PATH}IABR-Regular.woff") format("woff");
-//                             font-style: normal;
-//                             font-weight:400
-//                         }`;
+
 
 settings.FONT_WEBFONT = false;
 

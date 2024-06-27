@@ -87,17 +87,11 @@ export class StateMachine {
     this.navigationDebounceTimeout = setTimeout(() => {
       clearTimeout(self.navigationDebounceTimeout);
       self.navigationDebounceTimeout = undefined;
-      console.log("Debounce done!");
     },1000);
   }
   navigateTo(newState, id) {
     
-    console.log("Debouncing navigation event: ",this.navigationDebounceTimeout);
-
-    if(this.navigationDebounceTimeout !== undefined){
-      console.log("Ongoing navigationevent -- ignoring this event",this.navigationDebounceTimeout);
-      return;
-    } 
+    if(this.navigationDebounceTimeout !== undefined) return; 
     
     this.debounceNavigation();
     

@@ -125,7 +125,7 @@ export class Area {
   setLocation(e){
     
     if(this.stateMachine.navigationDebounceTimeout !== undefined){
-      console.log(">> area - other area was clicked first");
+      // console.log(">> area - other area was clicked first");
       return;
     }
     
@@ -137,7 +137,7 @@ export class Area {
       if(el.classList.contains("marker")) actualId = el.id;
     }
     
-    console.log("clicked area", e, actualId);
+    // console.log("clicked area", e, actualId);
 
    
     this.stateMachine.navigateTo(settings.get("STATES").INFO, actualId);

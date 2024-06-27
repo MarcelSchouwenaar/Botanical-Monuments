@@ -64,6 +64,7 @@ const init = async function(){
     
     //get user generate content
     const userContributedData = await utils.fetchUserContent(settings.get("GSHEET_ID"));
+    console.log(userContributedData);
     
     //add user locations to the map
     userContributedData.forEach((userContent) => {

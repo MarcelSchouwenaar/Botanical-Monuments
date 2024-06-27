@@ -212,35 +212,76 @@ export async function fetchUserContent(_sheetId) {
     userContent = jsonData.table.rows.map((row) => {
       let userContentItem = {};
       for (let i = 0; i < userContentKeys.length; i++) {
-        userContentItem[userContentKeys[i]] = row.c[i].v;
+        if(row.c[i]){
+          userContentItem[userContentKeys[i]] = row.c[i].v;
+        } else {
+          console.log("No value for: ", userContentKeys[i], row.c[i]);
+          if(userContentKeys[i] == "photos" && !row.c[i]){
+            userContentItem["photos"] = settings.get("PLACEHOLDER_IMAGE");
+          } else if(userContentKeys[i] == "approved" && !row.c[i]){
+            userContentItem["approved"] = "no";
+          } else {
+             userContentItem[userContentKeys[i]] = "not available";
+          }
+          
+        }
       }
       return userContentItem;
     });
+
     return userContent;
+    
   } catch (err) {
     console.log(err);
   }
 }
-export function getCoordinatesFromURL(url) {
-  const regex = /@(-?\d+\.\d+),(-?\d+\.\d+)/;
-  const match = url.match(regex);
 
-  if (match) {
-    const latitude = match[1];
-    const longitude = match[2];
-    return [longitude, latitude];
-  } else {
-    console.log("Coordinates not found in the URL.");
-    return [0, 0];
+function convertDMStoDD(degrees, minutes, seconds, direction) {
+  let dd = degrees + minutes / 60 + seconds / 3600;
+  if (direction == "S" || direction == "W") {
+    dd = dd * -1;
   }
+  return dd;
 }
+
+export function getCoordinatesFromURL(url) {
+ 
+  const decimalRegex = /(-?\d+\.\d+),\+?(-?\d+\.\d+)/;
+  const placeRegex = /3d(-?\d+\.\d+)!4d(-?\d+\.\d+)/;
+  const dmsRegex = /(\d+)[°|d](\d+)[\'|m](\d+(\.\d+)?)[\"|s]?[N|S]\s+(\d+)[°|d](\d+)[\'|m](\d+(\.\d+)?)[\"|s]?[E|W]/;
+
+  let match = url.match(decimalRegex);
+  if (match) {
+    return [parseFloat(match[2]), parseFloat(match[1])];
+  }
+
+  match = url.match(placeRegex);
+  if (match) {
+    return [parseFloat(match[2]), parseFloat(match[1])];
+  }
+
+  match = url.match(dmsRegex);
+  if (match) {
+    const lat = convertDMStoDD(parseInt(match[1]), parseInt(match[2]), parseFloat(match[3]), match[4]);
+    const lon = convertDMStoDD(parseInt(match[5]), parseInt(match[6]), parseFloat(match[7]), match[8]);
+    return [lon, lat];
+  }
+
+  console.log("Could not extract coordinates from URL", url);
+
+  return [0,0];
+}
+
+
 export function createPublicGoogleImageURLs(images) {
   let imageArr = images.indexOf(", ") >= 0 ? images.split(", ") : [images];
-  let gx_media_links = "";
 
   let publicImagesArr = imageArr.map((image) => {
-    let url = new URL(image);
-    let id = url.searchParams.get("id");
+    
+    if(image.indexOf("drive.google.com") == -1) return image;
+    
+    const url = new URL(image);
+    const id = url.searchParams.get("id");
     return `https://drive.google.com/thumbnail?id=${id}&sz=w1000`;
   });
 
@@ -272,15 +313,15 @@ export function stripHTML(html) {
 }
 
 export function getImage(imageURL){
+  
   if(!window.allImages) window.allImages = [];
   window.allImages.push(imageURL);
 
   if(!settings.get("PROXY")) return imageURL;
   if(settings.get("PROXY").length == 0) return imageURL;
+  if(imageURL.indexOf("drive.google.com") >= 0) return imageURL;
     
   const encodedSafeImageURL  = encodeURIComponent(imageURL);
   
-  // console.log("invoking proxy for: ",`${settings.get("PROXY")}?url=${encodedSafeImageURL}`);
-
   return `${settings.get("PROXY")}?url=${encodedSafeImageURL}`;
 }
