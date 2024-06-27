@@ -187,9 +187,12 @@ export class Place {
   }
 
   showLocation() {
-    this.map.flyTo({
-      center: this.center,
-      zoom: settings.get("MAPBOX_DETAIL_ZOOM"),
-    });
+    
+    if(this.location.geometry.type == "Polygon"){
+       const bounds = this.place.getBoundaries();
+       this.map.fitBounds(bounds, {padding: 20});
+    } else {
+       this.map.flyTo({center: this.center,zoom: settings.get("MAPBOX_DETAIL_ZOOM")});
+    }
   }
 }

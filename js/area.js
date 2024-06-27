@@ -9,6 +9,7 @@ export class Area {
   map;
   stateMachine;
   tags;
+  activeState = false;
 
   constructor(name, id, map, location, tags, stateMachine) {
     this.name = name;
@@ -74,6 +75,23 @@ export class Area {
     let centerY = (Math.max(...listY) + Math.min(...listY)) / 2;
     return [centerX, centerY];
   }
+  getBoundaries(){
+      const coordinates = this.location.geometry.coordinates[0];
+
+      // Create a 'LngLatBounds' with both corners at the first coordinate.
+      const bounds = new mapboxgl.LngLatBounds(
+          coordinates[0],
+          coordinates[0]
+      );
+
+      // Extend the 'LngLatBounds' to include every coordinate in the bounds result.
+      for (const coord of coordinates) {
+          bounds.extend(coord);
+      }
+      
+      return bounds;
+
+  }
 
   show() {
     // this.map.setLayoutProperty("fill_" + this.id, "visibility", "visible");
@@ -84,9 +102,15 @@ export class Area {
   }
   activate(){
     // console.log("activate area");
+    this.activeState = true;
+    this.map.setPaintProperty("line_" + this.id,"line-opacity",1);
+    this.map.setPaintProperty("fill_" + this.id,"fill-opacity",1);
   }
   deactivate(){
     // console.log("deactivate area");
+    this.activeState = false;
+    this.map.setPaintProperty("line_" + this.id,"line-opacity",0);
+    this.map.setPaintProperty("fill_" + this.id,"fill-opacity",1);
   }
   onMouseMove(){
     this.map.setPaintProperty("line_" + this.id,"line-opacity",1);
@@ -94,10 +118,17 @@ export class Area {
     
   }
   onMouseLeave(){
+    if(this.activeState == true) return;
     this.map.setPaintProperty("line_" + this.id,"line-opacity",0);
     this.map.setPaintProperty("fill_" + this.id,"fill-opacity",1);
   }
   setLocation(e){
+    
+    if(this.stateMachine.navigationDebounceTimeout !== undefined){
+      console.log(">> area - other area was clicked first");
+      return;
+    }
+    
     let actualId = this.id;
 
     if (e.hasOwnProperty("originalEvent")) {

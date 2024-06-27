@@ -48,6 +48,7 @@ const init = async function(){
     loader.addStatus("Processed location data");
 
     const locations       = geoJSON.locations; 
+    
     settings.set("GMAP_TITLE",geoJSON.title);
     settings.set("GMAP_DESCRIPTION",geoJSON.description);
         

@@ -9,6 +9,7 @@ export class StateMachine {
   map;
   filterEvent = new Event("filterUpdate");
   navigationEvent = new Event("navigationUpdate");
+  navigationDebounceTimeout = undefined;
 
   constructor(map) {
     this.prevZoom = settings.get("MAPBOX_DEFAULT_ZOOM");
@@ -81,7 +82,25 @@ export class StateMachine {
     document.body.dispatchEvent(this.navigationEvent);
     
   }
+  debounceNavigation(){
+    const self = this;
+    this.navigationDebounceTimeout = setTimeout(() => {
+      clearTimeout(self.navigationDebounceTimeout);
+      self.navigationDebounceTimeout = undefined;
+      console.log("Debounce done!");
+    },1000);
+  }
   navigateTo(newState, id) {
+    
+    console.log("Debouncing navigation event: ",this.navigationDebounceTimeout);
+
+    if(this.navigationDebounceTimeout !== undefined){
+      console.log("Ongoing navigationevent -- ignoring this event",this.navigationDebounceTimeout);
+      return;
+    } 
+    
+    this.debounceNavigation();
+    
     let url = new URL(document.location);
     url.searchParams.set("state", newState);
 
@@ -98,6 +117,7 @@ export class StateMachine {
   }
 
   onMapMoveEnd() {
+
     if (!this.activeId) {
       this.prevCenter = this.map.getCenter();
       this.prevZoom = this.map.getZoom();
