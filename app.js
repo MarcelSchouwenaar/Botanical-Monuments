@@ -50,7 +50,7 @@ const init = async function(){
     const locations       = geoJSON.locations; 
     settings.set("GMAP_TITLE",geoJSON.title);
     settings.set("GMAP_DESCRIPTION",geoJSON.description);
-    
+        
     //add styles and UI elements
     let decorator         = new Decorator(stateMachine);
     

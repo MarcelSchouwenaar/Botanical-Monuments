@@ -85,7 +85,8 @@ export class Decorator{
     titleEl.innerHTML = settings.get("TITLE");
     
     let aboutEl = document.createElement("div");
-    aboutEl.innerHTML = settings.get("ABOUT");
+    let aboutTxt = settings.get("GMAP_DESCRIPTION") || settings.get("ABOUT");
+    aboutEl.innerHTML = utils.wrapLanguageTags(aboutTxt);
     
     this.aboutPage.appendChild(titleEl);
     this.aboutPage.appendChild(aboutEl);
