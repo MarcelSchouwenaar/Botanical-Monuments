@@ -274,7 +274,8 @@ export function getCoordinatesFromURL(url) {
 
 
 export function createPublicGoogleImageURLs(images) {
-  
+  console.log("fixing urls for: ",images);
+    
   let imageArr = images.indexOf(", ") >= 0 ? images.split(", ") : [images];
 
   let publicImagesArr = imageArr.map((image) => {
@@ -282,7 +283,9 @@ export function createPublicGoogleImageURLs(images) {
     const url = new URL(image);
     let id;
 
-    if(image.indexOf("drive.google.com/file") >= 0){
+    if(image == settings.get("PLACEHOLDER_IMAGE")){
+      return image;   
+    } else if(image.indexOf("drive.google.com/file") >= 0){
       // for paths: https://drive.google.com/file/d/1yynvCb-3GwemD1pcPFbr-bQxMZZwqY2E/view?usp=share_link
       const pathname = url.pathname;
       const pathArr = pathname.split("/");
