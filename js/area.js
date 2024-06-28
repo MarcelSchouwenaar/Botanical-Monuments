@@ -22,10 +22,10 @@ export class Area {
   }
   async addArea() {
     const self = this;
-    const pattern = await PatternMaker(this.tags);
+    // const pattern = await PatternMaker(this.tags);
 
-    let img = new Image();
-    img.src = pattern;
+    // let img = new Image();
+    // img.src = pattern;
     // gallery.appendChild(img);
 
     this.map.addSource(this.name + "-"+ this.id, {
@@ -35,10 +35,10 @@ export class Area {
         geometry: this.location.geometry,
       },
     });
-    this.map.loadImage(pattern, (err, image) => {
-      if (err) throw err;
-      this.map.addImage("pattern_" + this.id, image);
-    });
+//     this.map.loadImage(pattern, (err, image) => {
+//       if (err) throw err;
+//       this.map.addImage("pattern_" + this.id, image);
+//     });
     
     this.map.addLayer({
       id: "fill_" + this.id,
@@ -46,9 +46,9 @@ export class Area {
       source: this.name + "-"+ this.id,
       layout: {},
       paint: {
-        "fill-pattern": "pattern_" + this.id,
-        // "fill-color": settings.MAP_AREA_FILL,
-        // "fill-opacity": settings.MAP_AREA_OPACITY,
+        // "fill-pattern": "pattern_" + this.id,
+        "fill-color": settings.get("MAP_AREA_FILL"),
+        "fill-opacity": settings.get("MAP_AREA_OPACITY"),
       },
     });
      this.map.addLayer({
@@ -104,13 +104,13 @@ export class Area {
     // console.log("activate area");
     this.activeState = true;
     this.map.setPaintProperty("line_" + this.id,"line-opacity",1);
-    this.map.setPaintProperty("fill_" + this.id,"fill-opacity",1);
+    this.map.setPaintProperty("fill_" + this.id,"fill-opacity",settings.get("MAP_AREA_HOVER_OPACITY"));
   }
   deactivate(){
     // console.log("deactivate area");
     this.activeState = false;
     this.map.setPaintProperty("line_" + this.id,"line-opacity",0);
-    this.map.setPaintProperty("fill_" + this.id,"fill-opacity",1);
+    this.map.setPaintProperty("fill_" + this.id,"fill-opacity",settings.get("MAP_AREA_OPACITY"));
   }
   onMouseMove(){
     this.map.setPaintProperty("line_" + this.id,"line-opacity",1);
@@ -120,7 +120,7 @@ export class Area {
   onMouseLeave(){
     if(this.activeState == true) return;
     this.map.setPaintProperty("line_" + this.id,"line-opacity",0);
-    this.map.setPaintProperty("fill_" + this.id,"fill-opacity",1);
+    this.map.setPaintProperty("fill_" + this.id,"fill-opacity",settings.get("MAP_AREA_OPACITY"));
   }
   setLocation(e){
     

@@ -66,9 +66,10 @@ settings.FONT_WEBFONT = false;
 
 // STYLE
 settings.MAP_AREA_FILL = "#00ff00";
+settings.MAP_AREA_OPACITY = 0.1;
 // 00CC11
 settings.MAP_AREA_OUTLINE = settings.COLOR_HIGHLIGHT;
-settings.MAP_AREA_HOVER_OPACITY = 0.25;
+settings.MAP_AREA_HOVER_OPACITY = 0.2;
 settings.MAP_AREA_HOVER_OUTLINE = settings.COLOR_HIGHLIGHT;
 
 settings.PLACEHOLDER_IMAGE = CDN_PATH + "Placeholder.png";
