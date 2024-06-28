@@ -274,14 +274,23 @@ export function getCoordinatesFromURL(url) {
 
 
 export function createPublicGoogleImageURLs(images) {
+  
   let imageArr = images.indexOf(", ") >= 0 ? images.split(", ") : [images];
 
   let publicImagesArr = imageArr.map((image) => {
     
-    if(image.indexOf("drive.google.com") == -1) return image;
-    
     const url = new URL(image);
-    const id = url.searchParams.get("id");
+    let id;
+
+    if(image.indexOf("drive.google.com/file") >= 0){
+      // for paths: https://drive.google.com/file/d/1yynvCb-3GwemD1pcPFbr-bQxMZZwqY2E/view?usp=share_link
+      const pathname = url.pathname;
+      const pathArr = pathname.split("/");
+      id = pathArr[3];
+    } else {
+      // for paths: https://drive.google.com/open?id=1yynvCb-3GwemD1pcPFbr-bQxMZZwqY2E
+      id = url.searchParams.get("id");
+    }
     return `https://drive.google.com/thumbnail?id=${id}&sz=w1000`;
   });
 
