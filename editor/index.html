@@ -1,0 +1,84 @@
+<html>
+  <head>
+    <title>Follymaps - editor</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css"
+      integrity="sha512-NhSC1YmyruXifcj/KFRWoC561YpHpc5Jtzgvbuzx5VozKpWvQ+4nXhPdFgmx8xqexRcpAglTj9sIBWINXa8x5w=="
+      crossorigin="anonymous"
+    />
+    <link href="../editor/editor.css" rel="stylesheet" />
+    <script type="module" src="../editor/js/panel_data.js" defer></script>
+    <script type="module" src="../editor/js/panel_mapstyle.js" defer></script>
+    <script type="module" src="../editor/js/panel_settings.js" defer></script>
+    <script type="module" src="../editor/js/panel_styling.js" defer></script>
+    <script type="module" src="../editor/js/panel_tags.js" defer></script>
+    <script type="module" src="../editor/editor.js" defer></script>
+
+  </head>
+  <body>
+    <div id="editor">
+      <div id="logo">
+        <h1>
+        FOLLYMAPS
+        </h1>
+      </div>
+      <div id="topbar">        
+        <button id="toggleMobile">mobile</button>
+        <button id="refreshFrame">refresh</button>
+      </div>
+     
+      <div id="leftbar" class="sidePanel">
+        <h2>
+          This map
+        </h2>
+        <!-- MAP -->
+        <div class="property" id="propData">
+          <span class="propertyIcon">🗺️</span>
+          <span class="propertyTitle">Data</span>
+          <span class="propertySubTitle">Google map, user input</span>
+        </div>
+        
+         <div class="property" id="propSettings">
+          <span class="propertyIcon">🚀</span>
+          <span class="propertyTitle">Settings</span>
+          <span class="propertySubTitle">Title, caption, loading</span>
+        </div>
+        
+        <!--   STYLE   -->
+        <div class="property" id="propMapStyle">
+          <span class="propertyIcon">🏞️</span>
+          <span class="propertyTitle">Map Style</span>
+          <span class="propertySubTitle">Style the map</span>
+        </div>
+        <div class="property" id="propStyling">
+          <span class="propertyIcon">🎨</span>
+          <span class="propertyTitle">Styling</span>
+          <span class="propertySubTitle">Fonts, colors</span>
+        </div>
+        <div class="property" id="propTags">
+          <span class="propertyIcon">🔖</span>
+          <span class="propertyTitle">Tags</span>
+          <span class="propertySubTitle">Tags, icons, patterns</span>
+        </div>
+
+      </div>
+      <div id="map">
+        <iframe src="../index.html" id="mapFrame"> </iframe>
+      </div>
+      <div id="rightbar" class="sidePanel">
+        Welcome to Follymaps.
+        Here you can create your own map!
+        Adjust the properties to the left
+        
+        
+      
+      </div>
+      <div id="account">area</div>
+      <div id="bottombar">area</div>
+    </div>
+    <div id="modal">
+      This is a modal;
+    </div>
+  </body>
+</html>
